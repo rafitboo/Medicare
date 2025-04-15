@@ -1,0 +1,77 @@
+{% extends 'admin/admin_base.html' %}
+
+{% block title %}Edit Medicine{% endblock %}
+
+{% block content %}
+<div class="edit-medicine-container">
+    <div class="edit-medicine-card">
+        <div class="edit-medicine-header">
+            <h1>Edit Medicine</h1>
+            <div class="medicine-id">ID: {{ medicine.id }}</div>
+        </div>
+
+        <form method="POST" class="edit-medicine-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="name">Medicine Name</label>
+                    <input type="text" id="name" name="name" value="{{ medicine.name }}" required>
+                    <div class="form-hint">Enter the commercial name</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" rows="3">{{ medicine.description }}</textarea>
+                    <div class="form-hint">Optional details about usage</div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="category_id">Category</label>
+                    <select id="category_id" name="category_id" required>
+                        {% for category in categories %}
+                        <option value="{{ category.id }}" {% if category.id == medicine.category_id %}selected{% endif %}>
+                            {{ category.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="price">Price ($)</label>
+                    <div class="input-with-icon">
+                        <span class="currency-symbol">$</span>
+                        <input type="number" id="price" name="price" value="{{ "%.2f"|format(medicine.price) }}" step="0.01" min="0" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="stock">Stock Quantity</label>
+                    <input type="number" id="stock" name="stock" value="{{ medicine.stock }}" min="0" required>
+                    <div class="stock-status" id="stock-status">
+                        {% if medicine.stock == 0 %}
+                        <span class="status-badge out-of-stock">Out of Stock</span>
+                        {% elif medicine.stock < 10 %}
+                        <span class="status-badge low-stock">Low Stock</span>
+                        {% else %}
+                        <span class="status-badge in-stock">In Stock</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-save">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+                <a href="{{ url_for('admin.manage_medicines') }}" class="btn btn-cancel">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/edit_medicine.css') }}">
+<script src="{{ url_for('static', filename='js/edit_medicine.js') }}"></script>
+{% endblock %}

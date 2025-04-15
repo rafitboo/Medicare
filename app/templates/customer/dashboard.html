@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pharmacy.css') }}">
+{% endblock %}
+{% block title %}Customer Dashboard{% endblock %}
+
+{% block content %}
+<div class="pharmacy-dashboard">
+    <div class="dashboard-header">
+        <h1>Welcome to Our Online Pharmacy</h1>
+        <p>Find your medications and health products</p>
+    </div>
+
+    <div class="search-sort-container">
+        <div class="search-filter-section">
+            <div class="search-box">
+                <input type="text" id="medicine-search" placeholder="Search medicines..." class="search-input">
+                <button class="search-button">Search</button>
+                <a href="{{ url_for('customer.dashboard') }}" class="clear-search" id="clear-search">Clear</a>
+            </div>
+            
+            <div class="filter-options">
+                <select id="filter-category" class="filter-select">
+                    <option value="all">All Categories</option>
+                    {% for category in categories %}
+                    <option value="{{ category.id }}">{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        
+        <div class="sort-options">
+            <select id="sort-by" class="sort-select">
+                <option value="name-asc">Name (A-Z)</option>
+                <option value="name-desc">Name (Z-A)</option>
+                <option value="price-asc">Price (Low to High)</option>
+                <option value="price-desc">Price (High to Low)</option>
+                <option value="expiry-asc">Expiry (Soonest)</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="medicine-grid" id="medicine-container">
+        {% for medicine in medicines %}
+        <div class="medicine-card" data-id="{{ medicine.id }}" data-price="{{ medicine.price }}" data-expiry="{{ medicine.expiry_date }}" data-stock="{{ medicine.stock }}" data-category="{{ medicine.category_id }}">
+        
+            <div class="medicine-details">
+                <h3>{{ medicine.name }}</h3>
+                <p class="description">{{ medicine.description }}</p>
+                <div class="price-stock">
+                    <span class="price">${{ "%.2f"|format(medicine.price) }}</span>
+                    <span class="stock">{{ medicine.stock }} in stock</span>
+                </div>
+                <div class="expiry-date">
+                    {% if medicine.expiry_date %}
+                    Expiry: {{ medicine.expiry_date.strftime('%b %d, %Y') }}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="medicine-actions">
+                <div class="quantity-control">
+                    <button class="quantity-btn minus">-</button>
+                    <input type="number" class="quantity-input" value="1" min="1" max="{{ medicine.stock }}">
+                    <button class="quantity-btn plus">+</button>
+                </div>
+                <button class="add-to-cart-btn" data-id="{{ medicine.id }}">Add to Cart</button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+<!-- Floating See My Cart Button -->
+<a href="{{ url_for('customer.mycart') }}" class="floating-cart-btn">See My Cart</a>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}" defer></script>
+{% endblock %}

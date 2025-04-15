@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign Up - MediCare{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/signup.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="signup-container">
+    <div class="signup-card">
+        <div class="signup-header">
+            <h1>Create Your Account</h1>
+            <p>Join MediCare to get your medicines delivered quickly</p>
+        </div>
+        
+        <form id="signupForm" class="signup-form" method="POST" action="{{ url_for('auth.signup_page') }}">
+            <div class="form-group">
+                <label for="fullName">Full Name</label>
+                <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required>
+                <div class="error-message" id="nameError"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                <div class="error-message" id="emailError"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
+                <div class="error-message" id="phoneError"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="password-input">
+                    <input type="password" id="password" name="password" placeholder="Create a password" required>
+                    <span class="toggle-password">👁️</span>
+                </div>
+                <div class="password-strength">
+                    <div class="strength-meter"></div>
+                    <div class="strength-text"></div>
+                </div>
+                <div class="error-message" id="passwordError"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <div class="password-input">
+                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
+                    <span class="toggle-password">👁️</span>
+                </div>
+                <div class="error-message" id="confirmPasswordError"></div>
+            </div>
+            
+            <div class="form-group checkbox-group">
+                <input type="checkbox" id="terms" name="terms" required>
+                <label for="terms">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
+                <div class="error-message" id="termsError"></div>
+            </div>
+            
+            <button type="submit" class="signup-btn">Create Account</button>
+            
+            <div class="login-link">
+                Already have an account? <a href="/login">Log in</a>
+            </div>
+        </form>
+    </div>
+    
+    <div class="signup-benefits">
+        <h2>Why Sign Up?</h2>
+        <ul class="benefits-list">
+            <li>✅ Fastest medicine delivery in your city</li>
+            <li>✅ Exclusive discounts for members</li>
+            <li>✅ Free doctor consultations</li>
+            <li>✅ Prescription management</li>
+            <li>✅ Order history tracking</li>
+        </ul>
+        
+        <div class="secure-badge">
+            🔒 100% Secure Registration
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/signup.js') }}"></script>
+{% endblock %}
