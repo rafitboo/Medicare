@@ -14,14 +14,14 @@ def signup_page():
     if request.method == 'GET':
         return render_template('auth/signup.html')
 
-    full_name = request.form.get('fullName', '').strip()
+    username = request.form.get('username', '').title().strip()
     email = request.form.get('email', '').strip().lower()
     phone = request.form.get('phone', '').strip()
     password = request.form.get('password', '')
     confirm_password = request.form.get('confirmPassword', '')
     terms = request.form.get('terms')
 
-    if not all([full_name, email, phone, password, confirm_password]):
+    if not all([username, email, phone, password, confirm_password]):
         flash('All fields are required', 'error')
         return redirect(url_for('auth.signup_page'))
 
@@ -38,7 +38,7 @@ def signup_page():
         return redirect(url_for('auth.signup_page'))
 
     try:
-        new_user, error = User.register(full_name, email, phone, password)
+        new_user, error = User.register(username, email, phone, password)
         if error:
             flash(error, 'error')
             return redirect(url_for('auth.signup_page'))

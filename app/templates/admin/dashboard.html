@@ -19,13 +19,17 @@
             <p>Manage your pharmacy efficiently</p>
         </header>
         <section class="dashboard-cards">
-            <a href="{{ url_for('admin.manage_medicines') }}" class="card">
-                <h3>Manage Medicines</h3>
-                <p>View, add, edit, or delete medicines in the inventory.</p>
-            </a>
             <a href="{{ url_for('admin.manage_users') }}" class="card">
                 <h3>Manage Users</h3>
                 <p>View and manage registered users.</p>
+            </a>
+            <a href="{{ url_for('admin.manage_categories') }}" class="card">
+                <h3>Manage Categories</h3>
+                <p>View, add, edit, or delete categories in the system.</p>
+            </a>
+            <a href="{{ url_for('admin.manage_medicines') }}" class="card">
+                <h3>Manage Medicines</h3>
+                <p>View, add, edit, or delete medicines in the inventory.</p>
             </a>
             <a href="{{ url_for('auth.logout') }}" class="card">
                 <h3>Logout</h3>

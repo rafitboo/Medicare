@@ -1,26 +1,26 @@
 /* Main Container */
-.manage-users-container {
-    max-width: 1400px;
+.manage-categories-container {
+    max-width: 1200px;
     margin: 2rem auto;
     padding: 0 1rem;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* Header Styles */
-.user-header {
+.category-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 2rem;
 }
 
-.user-header h1 {
+.category-header h1 {
     color: #2c3e50;
     font-weight: 600;
 }
 
 /* Form Styles */
-.user-form-container {
+.category-form-container {
     display: none;
     background: #f8f9fa;
     padding: 1.5rem;
@@ -33,6 +33,7 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    margin-bottom: 1rem;
 }
 
 .form-group label {
@@ -41,7 +42,6 @@
 }
 
 .form-group input,
-.form-group select,
 .form-group textarea {
     padding: 0.75rem;
     border: 1px solid #ced4da;
@@ -50,26 +50,15 @@
 }
 
 .form-group textarea {
-    min-height: 60px;
+    min-height: 100px;
     resize: vertical;
 }
 
 .form-group input:focus,
-.form-group select:focus,
 .form-group textarea:focus {
     outline: none;
     border-color: #80bdff;
     box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-}
-
-.form-row {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 1rem;
-}
-
-.form-row .form-group {
-    flex: 1;
 }
 
 .form-actions {
@@ -116,15 +105,15 @@
     background-color: #c0392b;
 }
 
-/* User List Styles */
-.user-list-container {
+/* Category List Styles */
+.category-list-container {
     background: white;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     overflow: hidden;
 }
 
-.user-list-container h2 {
+.category-list-container h2 {
     padding: 1rem;
     margin: 0;
     background: #f8f9fa;
@@ -133,31 +122,21 @@
 }
 
 .search-filter {
-    display: flex;
     padding: 1rem;
-    gap: 1rem;
     background: #f8f9fa;
     border-bottom: 1px solid #dee2e6;
 }
 
-.search-filter input,
-.search-filter select {
+.search-filter input {
     padding: 0.5rem 1rem;
     border: 1px solid #ced4da;
     border-radius: 4px;
     font-size: 1rem;
-}
-
-.search-filter input {
-    flex: 2;
-}
-
-.search-filter select {
-    flex: 1;
+    width: 100%;
 }
 
 /* List Styles */
-.user-list {
+.category-list {
     display: flex;
     flex-direction: column;
 }
@@ -176,7 +155,7 @@
     flex-direction: column;
 }
 
-.user-item {
+.category-item {
     display: flex;
     padding: 1rem;
     align-items: center;
@@ -184,36 +163,21 @@
     transition: background-color 0.2s;
 }
 
-.user-item:hover {
+.category-item:hover {
     background-color: #f8f9fa;
 }
 
-.user-id {
-    flex: 0.5;
-    color: #6c757d;
-}
-
-.user-name {
+.cat-name {
     flex: 1;
     font-weight: 500;
 }
 
-.user-email {
-    flex: 1.5;
+.cat-description {
+    flex: 2;
     color: #6c757d;
 }
 
-.user-phone {
-    flex: 1;
-    color: #6c757d;
-}
-
-.user-role {
-    flex: 0.5;
-    font-weight: 500;
-}
-
-.user-actions {
+.cat-actions {
     flex: 1;
     display: flex;
     gap: 0.5rem;
@@ -245,44 +209,17 @@
     background-color: #c0392b;
 }
 
-/* Role Status */
-.admin-role {
-    color: #d9534f; /* Red for admin */
-    font-weight: bold;
-}
-  
-.staff-role {
-color: #5bc0de; /* Light blue for staff */
-font-weight: bold;
-}
-  
-.customer-role {
-color: #5cb85c; /* Green for customers */
-}
 /* Responsive Design */
-@media (max-width: 992px) {
-    .user-id {
-        display: none;
-    }
-    
-    .user-phone {
-        display: none;
-    }
-}
-
 @media (max-width: 768px) {
-    .user-item {
+    .category-item {
         flex-direction: column;
         align-items: flex-start;
         gap: 0.5rem;
     }
     
-    .user-id,
-    .user-name,
-    .user-email,
-    .user-phone,
-    .user-role,
-    .user-actions {
+    .cat-name,
+    .cat-description,
+    .cat-actions {
         flex: none;
         width: 100%;
     }
@@ -291,7 +228,7 @@ color: #5cb85c; /* Green for customers */
         display: none;
     }
     
-    .user-actions {
+    .cat-actions {
         justify-content: flex-end;
     }
 }

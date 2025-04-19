@@ -3,11 +3,17 @@ from .user import User
 
 class Staff(User):
     __tablename__ = 'staff'
-    id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
+    id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), primary_key=True)
     
     __mapper_args__ = {
-        'polymorphic_identity': 'staff'
+        'polymorphic_identity': 'staff',
+        'inherit_condition': (id == User.id)
     }
+
+    def __init__(self, **kwargs):
+        kwargs['role'] = 'staff'
+        kwargs['type'] = 'staff'
+        super().__init__(**kwargs)
 
     def viewNewOrders(self):
         pass  # Implement logic to view new orders

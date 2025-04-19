@@ -4,16 +4,16 @@ from .user import User
 class Customer(User):
     __tablename__ = 'customers'
     id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), primary_key=True)
-
+    
     __mapper_args__ = {
         'polymorphic_identity': 'customer',
         'inherit_condition': (id == User.id)
     }
 
     def __init__(self, **kwargs):
-        super(Customer, self).__init__(**kwargs)
-        self.type = 'customer'
-        self.role = 'customer'
+        kwargs['role'] = 'customer'
+        kwargs['type'] = 'customer'
+        super().__init__(**kwargs)
 
     # Additional customer-specific methods...
 

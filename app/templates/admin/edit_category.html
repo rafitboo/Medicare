@@ -1,0 +1,40 @@
+{% extends 'admin/admin_base.html' %}
+
+{% block title %}Edit Category{% endblock %}
+
+{% block content %}
+<div class="edit-category-container">
+    <div class="edit-category-card">
+        <div class="edit-category-header">
+            <h1>Edit Category</h1>
+            <div class="category-id">ID: {{ category.id }}</div>
+        </div>
+
+        <form method="POST" class="edit-category-form">
+            <div class="form-group">
+                <label for="name">Category Name</label>
+                <input type="text" id="name" name="name" value="{{ category.name }}" required>
+                <div class="form-hint">Enter the category name</div>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" rows="3" required>{{ category.description }}</textarea>
+                <div class="form-hint">Provide a brief description of the category</div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-save">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+                <a href="{{ url_for('admin.manage_categories') }}" class="btn btn-cancel">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/edit_medicine.css') }}">
+<script src="{{ url_for('static', filename='js/edit_category.js') }}"></script>
+{% endblock %}

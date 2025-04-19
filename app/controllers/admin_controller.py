@@ -29,9 +29,9 @@ def manage_medicines():
         admin_user = Admin.query.get(session['user_id'])
 
         if action == 'add':
-            name = request.form.get('name')
+            name = request.form.get('name').title()
             description = request.form.get('description')
-            category_id = request.form.get('category_id')
+            category_id = request.form.get('category_id').capitalize()
             price = request.form.get('price')
             stock = request.form.get('stock')
 
@@ -41,7 +41,7 @@ def manage_medicines():
         return redirect(url_for('admin.manage_medicines'))
 
     medicines = Medicine.query.order_by(Medicine.name.asc()).all()
-    categories = Category.query.all()
+    categories = Category.query.order_by(Category.name.asc()).all()
     return render_template('admin/manage_medicines.html', medicines=medicines, categories=categories)
 
 
@@ -57,8 +57,8 @@ def edit_medicine(medicine_id):
         return redirect(url_for('admin.manage_medicines'))
 
     if request.method == 'POST':
-        name = request.form.get('name')
-        description = request.form.get('description')
+        name = request.form.get('name').title()
+        description = request.form.get('description').capitalize()
         category_id = request.form.get('category_id')
         price = request.form.get('price')
         stock = request.form.get('stock')
@@ -85,11 +85,33 @@ def delete_medicine(medicine_id):
     flash(message, 'success' if success else 'error')
 
     return redirect(url_for('admin.manage_medicines'))
-@admin.route('/admin/manage_users')
+
+@admin.route('/admin/manage_users', methods=['GET', 'POST'])
 def manage_users():
     if session.get('user_role') != 'admin':
         flash('Unauthorized access', 'error')
         return redirect(url_for('auth.login_page'))
+
+    if request.method == 'POST':
+        action = request.form.get('action')
+        admin_user = Admin.query.get(session['user_id'])
+
+        if action == 'add':
+            username = request.form.get('username').title()
+            email = request.form.get('email').lower()
+            phone = request.form.get('phone')
+            role = request.form.get('role')
+            address = request.form.get('address').title()
+            password = request.form.get('password')
+
+            if not username or not email or not password:
+                flash("Username, email, and password are required.", "error")
+                return redirect(url_for('admin.manage_users'))
+
+            success, message = admin_user.add_user(username, email, phone, role, address, password)
+            flash(message, 'success' if success else 'error')
+
+        return redirect(url_for('admin.manage_users'))
 
     users = User.query.all()
     return render_template('admin/manage_users.html', users=users)
@@ -107,14 +129,14 @@ def edit_users(user_id):
         return redirect(url_for('admin.manage_users'))
 
     if request.method == 'POST':
-        name = request.form.get('name')
-        email = request.form.get('email')
+        username = request.form.get('name').title()
+        email = request.form.get('email').lower()
         role = request.form.get('role')
-        address = request.form.get('address')
+        address = request.form.get('address').title()
         phone = request.form.get('phone')
 
         admin_user = Admin.query.get(session['user_id'])
-        if admin_user.edit_user(user_id, name, email, role, address, phone):
+        if admin_user.edit_user(user_id, username, email, role, address, phone):
             flash('User updated successfully.', 'success')
             return redirect(url_for('admin.manage_users'))
         else:
@@ -135,3 +157,61 @@ def delete_user(user_id):
         flash('Failed to delete user.', 'error')
 
     return redirect(url_for('admin.manage_users'))
+
+@admin.route('/admin/manage_categories', methods=['GET', 'POST'])
+def manage_categories():
+    if session.get('user_role') != 'admin':
+        flash('Unauthorized access', 'error')
+        return redirect(url_for('auth.login_page'))
+
+    if request.method == 'POST':
+        action = request.form.get('action')
+        admin_user = Admin.query.get(session['user_id'])
+
+        if action == 'add':
+            name = request.form.get('name').title()
+            description = request.form.get('description').capitalize()
+            success, message = admin_user.add_category(name, description)
+            flash(message, 'success' if success else 'error')
+
+        return redirect(url_for('admin.manage_categories'))
+
+    categories = Category.query.order_by(Category.name.asc()).all()
+    return render_template('admin/manage_categories.html', categories=categories)
+
+
+@admin.route('/admin/edit_category/<int:category_id>', methods=['GET', 'POST'])
+def edit_category(category_id):
+    if session.get('user_role') != 'admin':
+        flash('Unauthorized access', 'error')
+        return redirect(url_for('auth.login_page'))
+
+    category = Category.query.get(category_id)
+    if not category:
+        flash('Category not found', 'error')
+        return redirect(url_for('admin.manage_categories'))
+
+    if request.method == 'POST':
+        name = request.form.get('name').title()
+        description = request.form.get('description').capitalize()
+        admin_user = Admin.query.get(session['user_id'])
+        success, message = admin_user.update_category(category_id, name, description)
+        flash(message, 'success' if success else 'error')
+
+        if success:
+            return redirect(url_for('admin.manage_categories'))
+
+    return render_template('admin/edit_category.html', category=category)
+
+
+@admin.route('/admin/delete_category/<int:category_id>', methods=['POST'])
+def delete_category(category_id):
+    if session.get('user_role') != 'admin':
+        flash('Unauthorized access', 'error')
+        return redirect(url_for('auth.login_page'))
+
+    admin_user = Admin.query.get(session['user_id'])
+    success, message = admin_user.delete_category(category_id)
+    flash(message, 'success' if success else 'error')
+
+    return redirect(url_for('admin.manage_categories'))

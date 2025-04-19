@@ -1,13 +1,23 @@
 from . import db
 from .user import User
 from .medicine import Medicine
+from .category import Category
+from .customer import Customer
+from .staff import Staff
+
 class Admin(User):
     __tablename__ = 'admins'
-    id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
+    id = db.Column(db.Integer, db.ForeignKey('users.id', ondelete='CASCADE'), primary_key=True)
     
     __mapper_args__ = {
-        'polymorphic_identity': 'admin'
+        'polymorphic_identity': 'admin',
+        'inherit_condition': (id == User.id)
     }
+
+    def __init__(self, **kwargs):
+        kwargs['role'] = 'admin'
+        kwargs['type'] = 'admin'
+        super().__init__(**kwargs)
 
     def add_medicine(self, name, description, category_id, price, stock):
         """Add a new medicine."""
@@ -106,5 +116,90 @@ class Admin(User):
                 return False
         return False
 
+    def add_user(self, username, email, phone, role='customer', address=None, password=None):
+        """Add a new user and update the role-specific table with minimal redundancy."""
+        # Validate existing user
+        if User.query.filter((User.username == username) | (User.email == email)).first():
+            return False, "A user with this username or email already exists."
+
+        # Map roles to their respective classes
+        role_classes = {
+            'customer': Customer,
+            'admin': Admin,
+            'staff': Staff
+        }
+
+        # Validate role and get the appropriate class
+        user_class = role_classes.get(role)
+        if not user_class:
+            return False, "Invalid role specified."
+
+        # Create the user object dynamically
+        new_user = user_class(
+            username=username,
+            email=email,
+            phone=phone,
+            address=address,
+            password=password
+        )
+
+        # Commit to database
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+            return True, f"{role.capitalize()} added successfully."
+        except Exception as e:
+            db.session.rollback()
+            return False, f"Error adding user: {e}"
+
     def respondToChat(self):
         pass  # Implement chat response logic
+
+    def add_category(self, name, description):
+        """Add a new category."""
+        existing_category = Category.query.filter_by(name=name).first()
+        if existing_category:
+            return False, "Category already exists."
+
+        new_category = Category(name=name, description=description)
+        db.session.add(new_category)
+        try:
+            db.session.commit()
+            return True, "Category added successfully."
+        except Exception as e:
+            db.session.rollback()
+            return False, f"Error adding category: {e}"
+
+    def update_category(self, category_id, name, description):
+        """Update an existing category."""
+        category = Category.query.get(category_id)
+        if not category:
+            return False, "Category not found."
+
+        category.name = name
+        category.description = description
+        try:
+            db.session.commit()
+            return True, "Category updated successfully."
+        except Exception as e:
+            db.session.rollback()
+            return False, f"Error updating category: {e}"
+
+    def delete_category(self, category_id):
+        """Delete a category."""
+        category = Category.query.get(category_id)
+        if not category:
+            return False, "Category not found."
+
+        # Check if any medicines are associated with this category
+        associated_medicines = Medicine.query.filter_by(category_id=category_id).count()
+        if associated_medicines > 0:
+            return False, "Cannot delete category. There are medicines associated with this category."
+
+        db.session.delete(category)
+        try:
+            db.session.commit()
+            return True, "Category deleted successfully."
+        except Exception as e:
+            db.session.rollback()
+            return False, f"Error deleting category: {e}"
