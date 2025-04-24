@@ -2,7 +2,9 @@ from flask import Flask
 from .models import db
 
 def create_app():
-    app = Flask(__name__)
+    app = Flask(__name__, 
+                template_folder='View/templates',
+                static_folder='View')
     app.config['SECRET_KEY'] = "my_secret_key"
     app.config.from_object('config.Config')
 
