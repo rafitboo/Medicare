@@ -18,7 +18,7 @@ def signup_page():
     email = request.form.get('email', '').strip().lower()
     phone = request.form.get('phone', '').strip()
     password = request.form.get('password', '')
-    confirm_password = request.form.get('confirmPassword', '')
+    confirm_password = request.form.get('confirm_password', '') 
     terms = request.form.get('terms')
 
     if not all([username, email, phone, password, confirm_password]):
