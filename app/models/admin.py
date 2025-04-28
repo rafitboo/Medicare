@@ -4,6 +4,7 @@ from .medicine import Medicine
 from .category import Category
 from .customer import Customer
 from .staff import Staff
+from .chat import Chat
 
 class Admin(User):
     __tablename__ = 'admins'
@@ -152,8 +153,19 @@ class Admin(User):
             db.session.rollback()
             return False, f"Error adding user: {e}"
 
-    def respondToChat(self):
-        pass  # Implement chat response logic
+    def respondToChat(self, customer_id, message):
+        """Respond to a customer message."""
+        return Chat.add_message(customer_id, message, is_from_customer=False)
+
+    def get_all_customer_conversations(self):
+        """Get all customer IDs who have conversations."""
+        return Chat.get_customer_conversations()
+
+    def get_customer_conversation(self, customer_id):
+        """Get the conversation with a specific customer."""
+        # Mark messages as read when admin views them
+        Chat.mark_as_read(customer_id)
+        return Chat.get_conversation(customer_id)
 
     def add_category(self, name, description):
         """Add a new category."""

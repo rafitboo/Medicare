@@ -1,83 +1,74 @@
 {% extends 'base.html' %}
 {% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/pharmacy.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/mycart.css') }}">
 {% endblock %}
 {% block title %}My Cart{% endblock %}
 
 {% block content %}
 <div class="cart-container">
-    <h1>Your Cart</h1>
-    <div class="cart-items">
+    <h1 class="cart-title">Your Shopping Cart</h1>
+    
+    <div class="cart-content">
         {% if cart_items %}
-            <table>
+            <table class="cart-table">
                 <thead>
                     <tr>
                         <th>Medicine</th>
                         <th>Price</th>
                         <th>Quantity</th>
                         <th>Total</th>
-                        <th>Actions</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for item in cart_items %}
                     <tr>
-                        <td>{{ item.medicine.name }}</td>
-                        <td>${{ "%.2f"|format(item.medicine.price) }}</td>
-                        <td>
-                            <input type="number" value="{{ item.quantity }}" min="1" data-id="{{ item.medicine_id }}" class="quantity-input">
+                        <td class="medicine-name">{{ item.medicine.name }}</td>
+                        <td class="medicine-price">${{ "%.2f"|format(item.medicine.price) }}</td>
+                        <td class="quantity-cell">
+                            <form method="POST" action="{{ url_for('customer.update_cart_item', medicine_id=item.medicine_id) }}">
+                                <div class="quantity-control">
+                                    <button type="button" class="quantity-btn minus">-</button>
+                                    <input type="number" name="quantity" 
+                                           value="{{ item.quantity }}" 
+                                           min="1" 
+                                           max="{{ item.medicine.stock }}"
+                                           data-max-stock="{{ item.medicine.stock }}"
+                                           class="quantity-input">
+                                    <button type="button" class="quantity-btn plus">+</button>
+                                </div>
+                            </form>
                         </td>
-                        <td>${{ "%.2f"|format(item.medicine.price * item.quantity) }}</td>
-                        <td>
-                            <button class="remove-btn" data-id="{{ item.medicine_id }}">Remove</button>
+                        <td class="item-total">${{ "%.2f"|format(item.medicine.price * item.quantity) }}</td>
+                        <td class="action-cell">
+                            <form method="POST" action="{{ url_for('customer.remove_from_cart', medicine_id=item.medicine_id) }}">
+                                <button type="submit" class="remove-btn">×</button>
+                            </form>
                         </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         {% else %}
-            <p>Your cart is empty.</p>
+            <div class="empty-cart">
+                <p>Your cart is empty.</p>
+                <a href="{{ url_for('customer.dashboard') }}" class="continue-shopping">Continue Shopping</a>
+            </div>
         {% endif %}
     </div>
+
+    {% if cart_items %}
     <div class="cart-summary">
-        <h3>Total: $<span id="cart-total">{{ cart_items | sum(attribute='medicine.price') }}</span></h3>
-        <button class="checkout-btn">Proceed to Checkout</button>
+        <div class="summary-content">
+            <h3>Cart Total: <span id="cart-total">${{ "%.2f"|format(total) }}</span></h3>
+            <button class="checkout-btn">Proceed to Checkout</button>
+            <a href="{{ url_for('customer.dashboard') }}" class="continue-shopping">Continue Shopping</a>
+        </div>
     </div>
+    {% endif %}
 </div>
 {% endblock %}
 
 {% block extra_js %}
-<script>
-    document.querySelectorAll('.quantity-input').forEach(input => {
-        input.addEventListener('change', function() {
-            const medicineId = this.getAttribute('data-id');
-            const quantity = this.value;
-            // Make an AJAX call to update the cart
-            fetch(`/cart/update/${medicineId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ quantity: quantity })
-            }).then(response => response.json()).then(data => {
-                if (data.success) {
-                    location.reload(); // Reload the page to see updated cart
-                }
-            });
-        });
-    });
-
-    document.querySelectorAll('.remove-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            const medicineId = this.getAttribute('data-id');
-            fetch(`/cart/remove/${medicineId}`, {
-                method: 'DELETE'
-            }).then(response => response.json()).then(data => {
-                if (data.success) {
-                    location.reload(); // Reload the page to see updated cart
-                }
-            });
-        });
-    });
-</script>
+<script src="{{ url_for('static', filename='js/mycart.js') }}"></script>
 {% endblock %}

@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask # type: ignore
 from .models import db
 
 def create_app():
@@ -16,11 +16,12 @@ def create_app():
 
     from .controllers.home import home
     from .controllers.auth_controller import auth
-    from .controllers.user_controller import customer
+    from .controllers.customer_controller import customer
     from .controllers.admin_controller import admin
 
     app.register_blueprint(home, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
     app.register_blueprint(customer, url_prefix='/') 
     app.register_blueprint(admin, url_prefix='/')
+    
     return app

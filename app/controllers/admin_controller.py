@@ -4,6 +4,9 @@ from app.models.medicine import Medicine
 from app.models.category import Category
 from app.models.user import User
 from app.models.admin import Admin
+from app.models.staff import Staff
+from app.models.chat import Chat
+from datetime import timedelta, datetime
 
 admin = Blueprint('admin', __name__)
 
@@ -215,3 +218,62 @@ def delete_category(category_id):
     flash(message, 'success' if success else 'error')
 
     return redirect(url_for('admin.manage_categories'))
+
+@admin.route('/admin/messages')
+def messages():
+    if session.get('user_role') not in ['admin', 'staff']:
+        flash('Unauthorized access', 'error')
+        return redirect(url_for('auth.login_page'))
+    
+    admin_user = Admin.query.get(session['user_id']) if session.get('user_role') == 'admin' else Staff.query.get(session['user_id'])
+    customer_ids = admin_user.get_all_customer_conversations()
+    customers = []
+    
+    for cust_id in customer_ids:
+        customer = User.query.get(cust_id)
+        if customer:
+            latest_message = Chat.query.filter_by(customer_id=cust_id).order_by(Chat.timestamp.desc()).first()
+            unread_count = Chat.query.filter_by(customer_id=cust_id, is_read=False, is_from_customer=True).count()
+
+            bd_timestamp = latest_message.timestamp + timedelta(hours=6) if latest_message else None
+            
+            customers.append({
+                'id': customer.id,
+                'name': customer.username,
+                'latest_message': latest_message.message if latest_message else 'No messages',
+                'timestamp': bd_timestamp,
+                'unread': unread_count,
+                'original_timestamp': latest_message.timestamp if latest_message else None  # Store original timestamp for sorting
+            })
+    
+
+    customers = sorted(customers, key=lambda x: x['original_timestamp'] or datetime.min, reverse=True)
+    
+    return render_template('admin/messages.html', customers=customers)
+
+@admin.route('/admin/messages/<int:customer_id>', methods=['GET', 'POST'])
+def customer_conversation(customer_id):
+    if session.get('user_role') not in ['admin', 'staff']:
+        flash('Unauthorized access', 'error')
+        return redirect(url_for('auth.login_page'))
+    
+    admin_user = Admin.query.get(session['user_id']) if session.get('user_role') == 'admin' else Staff.query.get(session['user_id'])
+    customer = User.query.get(customer_id)
+    
+    if not customer:
+        flash('Customer not found', 'error')
+        return redirect(url_for('admin.messages'))
+    
+    if request.method == 'POST':
+        message = request.form.get('message')
+        if message:
+            success, msg = admin_user.respondToChat(customer_id, message)
+            if not success:
+                flash(msg, 'error')
+        return redirect(url_for('admin.customer_conversation', customer_id=customer_id))
+    
+    conversation = admin_user.get_customer_conversation(customer_id)
+    for msg in conversation:
+        msg.bd_timestamp = msg.timestamp + timedelta(hours=6)
+
+    return render_template('admin/conversation.html', conversation=conversation, customer=customer)

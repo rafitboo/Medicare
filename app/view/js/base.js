@@ -53,29 +53,31 @@ document.addEventListener('DOMContentLoaded', function() {
         yearElement.innerHTML = yearElement.innerHTML.replace('2023', currentYear);
     }
     
-    // Flash message close functionality
-    const flashCloseButtons = document.querySelectorAll('.flash-close-btn');
-    flashCloseButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const flashMessage = this.closest('.flash-message');
-            if (flashMessage) {
-                flashMessage.style.animation = 'slideUp 0.3s ease-out';
-                flashMessage.addEventListener('animationend', () => {
-                    flashMessage.remove();
-                });
-            }
-        });
-    });
-    
-    // Auto-hide flash messages after 5 seconds
+    // Flash message handling
     const flashMessages = document.querySelectorAll('.flash-message');
     flashMessages.forEach(message => {
+        // Show message with animation
+        message.style.display = 'flex';
+        message.style.animation = 'slideDown 0.3s ease-out';
+        
+        // Auto-hide after 5 seconds
         setTimeout(() => {
             message.style.animation = 'slideUp 0.3s ease-out';
-            message.addEventListener('animationend', () => {
+            setTimeout(() => {
                 message.remove();
-            });
+            }, 300);
         }, 5000);
+        
+        // Handle close button
+        const closeBtn = message.querySelector('.flash-close-btn');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                message.style.animation = 'slideUp 0.3s ease-out';
+                setTimeout(() => {
+                    message.remove();
+                }, 300);
+            });
+        }
     });
 });
 
@@ -93,4 +95,5 @@ style.textContent = `
         }
     }
 `;
+document.head.appendChild(style);
 document.head.appendChild(style);

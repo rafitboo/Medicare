@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/pharmacy.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
 {% endblock %}
 {% block title %}Customer Dashboard{% endblock %}
 
@@ -58,12 +58,15 @@
                 </div>
             </div>
             <div class="medicine-actions">
-                <div class="quantity-control">
-                    <button class="quantity-btn minus">-</button>
-                    <input type="number" class="quantity-input" value="1" min="1" max="{{ medicine.stock }}">
-                    <button class="quantity-btn plus">+</button>
-                </div>
-                <button class="add-to-cart-btn" data-id="{{ medicine.id }}">Add to Cart</button>
+                <form method="POST" action="{{ url_for('customer.add_to_cart') }}" class="add-to-cart-form">
+                    <div class="quantity-control">
+                        <button type="button" class="quantity-btn minus" onclick="var input=this.nextElementSibling; if(input.value>1) input.value--">-</button>
+                        <input type="number" name="quantity" class="quantity-input" value="1" min="1" max="{{ medicine.stock }}">
+                        <button type="button" class="quantity-btn plus" onclick="var input=this.previousElementSibling; if(parseInt(input.value)<parseInt(input.max)) input.value++">+</button>
+                    </div>
+                    <input type="hidden" name="medicine_id" value="{{ medicine.id }}">
+                    <button type="submit" class="add-to-cart-btn">Add to Cart</button>
+                </form>
             </div>
         </div>
         {% endfor %}

@@ -22,8 +22,7 @@ class User(db.Model):
 
     orders = db.relationship('Order', backref='customer', lazy=True)
     prescriptions = db.relationship('Prescription', backref='customer', lazy=True)
-    chats_sent = db.relationship('Chat', foreign_keys='Chat.sender_id', backref='sender', lazy=True)
-    chats_received = db.relationship('Chat', foreign_keys='Chat.receiver_id', backref='receiver', lazy=True)
+    messages = db.relationship('Chat', foreign_keys='Chat.customer_id', backref='customer_user', lazy=True)
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)

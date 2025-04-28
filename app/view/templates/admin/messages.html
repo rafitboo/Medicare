@@ -1,0 +1,72 @@
+{% extends 'admin/admin_base.html' %}
+
+{% block title %}Customer Messages - Admin Panel{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/messages.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="admin-messages-container">
+    <div class="messages-header">
+        <h1><i class="fas fa-comments"></i> Customer Messages</h1>
+        <div class="search-filter-container">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search customers..." id="messageSearch">
+            </div>
+            <div class="filter-box">
+                <select id="messageFilter">
+                    <option value="all">All Messages</option>
+                    <option value="unread">Unread Only</option>
+                    <option value="recent">Recent First</option>
+                </select>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+    </div>
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    
+    <div class="messages-content">
+        {% if customers %}
+            <div class="conversation-list">
+                {% for customer in customers %}
+                    <a href="{{ url_for('admin.customer_conversation', customer_id=customer.id) }}" 
+                       class="conversation-item {% if customer.unread > 0 %}unread{% endif %}">
+                        <div class="conversation-details">
+                            <div class="conversation-header">
+                                <h5>{{ customer.name }}</h5>
+                                <span class="time">{{ customer.timestamp.strftime('%b %d, %H:%M') if customer.timestamp else '' }}</span>
+                            </div>
+                            <p class="preview-text">{{ customer.latest_message|truncate(70) }}</p>
+                        </div>
+                        {% if customer.unread > 0 %}
+                            <span class="unread-count">{{ customer.unread }}</span>
+                        {% endif %}
+                    </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="no-messages">
+                <i class="far fa-comment-dots"></i>
+                <h3>No messages yet</h3>
+                <p>When customers contact you, their messages will appear here.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/messages.js') }}"></script>
+{% endblock %}

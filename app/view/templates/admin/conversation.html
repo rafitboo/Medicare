@@ -1,0 +1,68 @@
+{% extends 'admin/admin_base.html' %}
+
+{% block title %}Conversation with {{ customer.username }} - Admin Panel{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/conversation.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="admin-conversation-container">
+    <div class="conversation-header">
+        <div class="header-content">
+            <a href="{{ url_for('admin.messages') }}" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <h1>Conversation with {{ customer.username }}</h1>
+        </div>
+        <div class="customer-info">
+            <span class="badge bg-light text-dark">
+                <i class="fas fa-user"></i> {{ customer.username }}
+            </span>
+            <span class="badge bg-light text-dark">
+                <i class="fas fa-envelope"></i> {{ customer.email }}
+            </span>
+        </div>
+    </div>
+
+    <div class="conversation-body">
+        <div class="messages-wrapper">
+            <div class="messages-container" id="messagesContainer">
+                {% if conversation %}
+                    {% for message in conversation %}
+                        <div class="message {% if message.is_from_customer %}customer{% else %}admin{% endif %}-message">
+                            <div class="message-content">
+                                <div class="message-text">{{ message.message }}</div>
+                                <div class="message-time">
+                                    {{ message.bd_timestamp.strftime('%b %d, %H:%M') }}
+                                    {% if not message.is_from_customer %}
+                                        <i class="fas fa-check-double read-icon"></i>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="no-messages">
+                        <i class="far fa-comment-dots"></i>
+                        <p>No messages yet</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <form method="POST" class="message-form">
+            <div class="form-group">
+                <textarea name="message" class="form-control" placeholder="Type your reply..." rows="1" required></textarea>
+                <button type="submit" class="send-button">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/conversation.js') }}"></script>
+{% endblock %}
