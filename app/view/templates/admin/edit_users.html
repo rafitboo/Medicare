@@ -5,7 +5,7 @@
 {% block content %}
 <div class="edit-user-container">
     <h1>Edit User</h1>
-    <form method="POST" class="edit-user-form">
+    <form method="POST" action="{{ url_for('admin_user.edit_users', user_id=user.id) }}" class="edit-user-form">
         <div class="form-group">
             <label for="name">Name:</label>
             <input type="text" id="name" name="name" value="{{ user.username }}" required class="form-control">

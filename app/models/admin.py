@@ -83,7 +83,7 @@ class Admin(User):
         return False
 
     def viewAllOrders(self):
-        pass  # Implement logic to view all orders
+        pass  
 
     def edit_user(self, user_id, name, email, role, address, phone):
         user = User.query.get(user_id)
@@ -119,23 +119,21 @@ class Admin(User):
 
     def add_user(self, username, email, phone, role='customer', address=None, password=None):
         """Add a new user and update the role-specific table with minimal redundancy."""
-        # Validate existing user
+
         if User.query.filter((User.username == username) | (User.email == email)).first():
             return False, "A user with this username or email already exists."
 
-        # Map roles to their respective classes
         role_classes = {
             'customer': Customer,
             'admin': Admin,
             'staff': Staff
         }
 
-        # Validate role and get the appropriate class
+
         user_class = role_classes.get(role)
         if not user_class:
             return False, "Invalid role specified."
-
-        # Create the user object dynamically
+        
         new_user = user_class(
             username=username,
             email=email,
@@ -143,8 +141,6 @@ class Admin(User):
             address=address,
             password=password
         )
-
-        # Commit to database
         try:
             db.session.add(new_user)
             db.session.commit()
@@ -152,20 +148,6 @@ class Admin(User):
         except Exception as e:
             db.session.rollback()
             return False, f"Error adding user: {e}"
-
-    def respondToChat(self, customer_id, message):
-        """Respond to a customer message."""
-        return Chat.add_message(customer_id, message, is_from_customer=False)
-
-    def get_all_customer_conversations(self):
-        """Get all customer IDs who have conversations."""
-        return Chat.get_customer_conversations()
-
-    def get_customer_conversation(self, customer_id):
-        """Get the conversation with a specific customer."""
-        # Mark messages as read when admin views them
-        Chat.mark_as_read(customer_id)
-        return Chat.get_conversation(customer_id)
 
     def add_category(self, name, description):
         """Add a new category."""
@@ -202,8 +184,6 @@ class Admin(User):
         category = Category.query.get(category_id)
         if not category:
             return False, "Category not found."
-
-        # Check if any medicines are associated with this category
         associated_medicines = Medicine.query.filter_by(category_id=category_id).count()
         if associated_medicines > 0:
             return False, "Cannot delete category. There are medicines associated with this category."

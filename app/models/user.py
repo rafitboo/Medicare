@@ -92,4 +92,19 @@ class User(db.Model):
     def logout(session):
         session.clear()
 
+    def update_profile(self, **kwargs):
+        """Update user profile information"""
+        allowed_fields = ['username', 'email', 'password', 'address', 'phone']
+        
+        for field, value in kwargs.items():
+            if field in allowed_fields and value is not None:
+                setattr(self, field, value)
+        
+        try:
+            db.session.commit()
+            return True, "Profile updated successfully"
+        except Exception as e:
+            db.session.rollback()
+            return False, f"Error updating profile: {str(e)}"
+
     

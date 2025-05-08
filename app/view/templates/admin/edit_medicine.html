@@ -10,7 +10,7 @@
             <div class="medicine-id">ID: {{ medicine.id }}</div>
         </div>
 
-        <form method="POST" class="edit-medicine-form">
+        <form method="POST" action="{{ url_for('admin_inventory.edit_medicine', medicine_id=medicine.id) }}" class="edit-medicine-form">
             <div class="form-row">
                 <div class="form-group">
                     <label for="name">Medicine Name</label>
@@ -64,7 +64,7 @@
                 <button type="submit" class="btn btn-save">
                     <i class="fas fa-save"></i> Save Changes
                 </button>
-                <a href="{{ url_for('admin.manage_medicines') }}" class="btn btn-cancel">
+                <a href="{{ url_for('admin_inventory.manage_medicines') }}" class="btn btn-cancel">
                     <i class="fas fa-times"></i> Cancel
                 </a>
             </div>

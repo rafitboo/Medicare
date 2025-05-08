@@ -1,6 +1,9 @@
-{% extends 'admin/admin_base.html' %}
-
-{% block title %}Conversation with {{ customer.username }} - Admin Panel{% endblock %}
+{% if role == 'admin' %}
+    {% extends "admin/admin_base.html" %}
+{% elif role == 'staff' %}
+    {% extends "staff/staff_base.html" %}
+{% endif %}
+{% block title %}Conversation with {{ customer.username }} - {% if role == 'admin' %}Admin{% else %}Staff{% endif %} Panel{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/conversation.css') }}">
@@ -10,7 +13,7 @@
 <div class="admin-conversation-container">
     <div class="conversation-header">
         <div class="header-content">
-            <a href="{{ url_for('admin.messages') }}" class="back-button">
+            <a href="{{ url_for('admin_chat.messages') }}" class="back-button">
                 <i class="fas fa-arrow-left"></i>
             </a>
             <h1>Conversation with {{ customer.username }}</h1>
@@ -30,7 +33,7 @@
             <div class="messages-container" id="messagesContainer">
                 {% if conversation %}
                     {% for message in conversation %}
-                        <div class="message {% if message.is_from_customer %}customer{% else %}admin{% endif %}-message">
+                        <div class="message {% if message.is_from_customer %}customer{% else %}staff{% endif %}-message">
                             <div class="message-content">
                                 <div class="message-text">{{ message.message }}</div>
                                 <div class="message-time">

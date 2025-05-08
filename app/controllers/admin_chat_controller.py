@@ -1,26 +1,14 @@
-from flask import Blueprint, flash, redirect, url_for, request, session, render_template
-from app.models import db
+from flask import Blueprint, render_template, request, session, redirect, url_for, flash, jsonify
+from app import db
 from app.models.user import User
-from app.models.cart import Cart
-from app.models.medicine import Medicine
-from app.models.category import Category
-from app.models.customer import Customer
-from app.models.chat import Chat
 from app.models.admin import Admin
 from app.models.staff import Staff
+from app.models.chat import Chat
 from app.models.notification import Notification
-from datetime import timedelta, datetime
 
-staff = Blueprint('staff', __name__)
+admin_chat = Blueprint('admin_chat', __name__)
 
-@staff.route('/staff/dashboard')
-def dashboard():
-    if session.get('user_role') != 'staff':
-        flash('Unauthorized access', 'error')
-        return redirect(url_for('auth.login_page'))
-    return render_template('staff/dashboard.html')
-
-@staff.route('/staff/messages')
+@admin_chat.route('/admin/messages')
 def messages():
     if session.get('user_role') not in ['admin', 'staff']:
         flash('Unauthorized access', 'error')
@@ -48,7 +36,7 @@ def messages():
     
     return render_template('chat/messages.html', customers=customers, role=session.get('user_role'))
 
-@staff.route('/staff/messages/<int:customer_id>', methods=['GET', 'POST'])
+@admin_chat.route('/admin/messages/<int:customer_id>', methods=['GET', 'POST'])
 def customer_conversation(customer_id):
     if session.get('user_role') not in ['admin', 'staff']:
         flash('Unauthorized access', 'error')
@@ -62,7 +50,7 @@ def customer_conversation(customer_id):
     customer = User.query.get(customer_id)
     if not customer:
         flash('Customer not found', 'error')
-        return redirect(url_for('staff.messages'))
+        return redirect(url_for('admin_chat.messages'))
     
     if request.method == 'POST':
         message = request.form.get('message')
@@ -70,32 +58,42 @@ def customer_conversation(customer_id):
             success, msg = Chat.add_message(customer_id, message, is_from_customer=False)
             if not success:
                 flash(msg, 'error')
-        return redirect(url_for('staff.customer_conversation', customer_id=customer_id))
+        return redirect(url_for('admin_chat.customer_conversation', customer_id=customer_id))
     
     conversation = Chat.get_customer_conversation_with_timestamps(customer_id)
     return render_template('chat/conversation.html', conversation=conversation, customer=customer, role=session.get('user_role'))
 
-@staff.route('/staff/notifications', methods=['GET', 'POST'])
+@admin_chat.route('/admin/notifications')
 def notifications():
-    if session.get('user_role') != 'staff':
+    if session.get('user_role') != 'admin':
         flash('Unauthorized access', 'error')
         return redirect(url_for('auth.login_page'))
     
-    staff_user = Staff.query.get(session['user_id'])
+    notifications = Notification.query.order_by(Notification.timestamp.desc()).all()
+    return render_template('admin/notifications.html', notifications=notifications)
+
+@admin_chat.route('/admin/notifications/<int:notification_id>/mark-read', methods=['POST'])
+def mark_notification_read(notification_id):
+    if session.get('user_role') != 'admin':
+        flash('Unauthorized access', 'error')
+        return redirect(url_for('auth.login'))
     
-    if request.method == 'POST':
-        message = request.form.get('message')
-        notification_type = request.form.get('notification_type')
-        
-        if message and notification_type:
-            success, msg = staff_user.notifyAdmin(message, notification_type)
-            if success:
-                flash('Notification sent successfully!', 'success')
-            else:
-                flash(msg, 'error')
-            return redirect(url_for('staff.notifications'))
+    success = Notification.mark_as_read(notification_id)
+    if success:
+        flash('Notification marked as read', 'success')
+    else:
+        flash('Failed to mark notification as read', 'error')
+    return redirect(url_for('admin_chat.notifications'))
+
+@admin_chat.route('/admin/notifications/mark-all-read', methods=['POST'])
+def mark_all_notifications_read():
+    if session.get('user_role') != 'admin':
+        flash('Unauthorized access', 'error')
+        return redirect(url_for('auth.login'))
     
-    # Get recent notifications sent by this staff member
-    notifications = Notification.query.filter_by(staff_id=staff_user.id).order_by(Notification.timestamp.desc()).limit(10).all()
-    
-    return render_template('staff/notifications.html', notifications=notifications)
+    success = Notification.mark_all_as_read()
+    if success:
+        flash('All notifications marked as read', 'success')
+    else:
+        flash('Failed to mark all notifications as read', 'error')
+    return redirect(url_for('admin_chat.notifications'))

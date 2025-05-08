@@ -1,6 +1,9 @@
-{% extends 'admin/admin_base.html' %}
-
-{% block title %}Customer Messages - Admin Panel{% endblock %}
+{% if role == 'admin' %}
+    {% extends "admin/admin_base.html" %}
+{% elif role == 'staff' %}
+    {% extends "staff/staff_base.html" %}
+{% endif %}
+{% block title %}Customer Messages - {% if role == 'admin' %}Admin{% else %}Staff{% endif %} Panel{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/messages.css') }}">
@@ -41,7 +44,7 @@
         {% if customers %}
             <div class="conversation-list">
                 {% for customer in customers %}
-                    <a href="{{ url_for('admin.customer_conversation', customer_id=customer.id) }}" 
+                    <a href="{{ url_for('admin_chat.customer_conversation', customer_id=customer.id) }}" 
                        class="conversation-item {% if customer.unread > 0 %}unread{% endif %}">
                         <div class="conversation-details">
                             <div class="conversation-header">

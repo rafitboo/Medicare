@@ -108,11 +108,11 @@ CREATE TABLE `carts` (
   `customer_id` int(11) NOT NULL,
   `medicine_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `customer_id` (`customer_id`),
+  UNIQUE KEY `unique_cart_item` (`customer_id`,`medicine_id`),
   KEY `medicine_id` (`medicine_id`),
-  CONSTRAINT `carts_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`),
+  CONSTRAINT `carts_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `users` (`id`),
   CONSTRAINT `carts_ibfk_2` FOREIGN KEY (`medicine_id`) REFERENCES `medicines` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=83 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -121,6 +121,7 @@ CREATE TABLE `carts` (
 
 LOCK TABLES `carts` WRITE;
 /*!40000 ALTER TABLE `carts` DISABLE KEYS */;
+INSERT INTO `carts` VALUES (81,1,3,77),(82,1,3,93);
 /*!40000 ALTER TABLE `carts` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -145,7 +146,7 @@ CREATE TABLE `categories` (
 
 LOCK TABLES `categories` WRITE;
 /*!40000 ALTER TABLE `categories` DISABLE KEYS */;
-INSERT INTO `categories` VALUES (1,'Vitamins and Supplements','Health supplements and multivitamins.'),(2,'Skin Care','Medicines and creams for skin care and treatments.'),(3,'Allergy Relief','Medicines to manage and treat allergies.'),(4,'Digestive Health','Medicines for digestive system care, such as antacids and laxatives.'),(5,'Heart Health','Medicines for cardiovascular health and blood pressure management.'),(6,'Diabetes Care','Medicines and supplies for managing diabetes.'),(7,'Eye Care','Drops and medicines for eye health and infections.'),(8,'Child Health','Medicines specifically formulated for children.'),(9,'Women\'s Health','Medicines for women-specific health conditions.'),(10,'Men\'s Health','Medicines for men-specific health conditions.'),(11,'Mental Health','Medicines for mental health and neurological disorders.'),(12,'First Aid','Medicines and items for immediate first aid care.'),(13,'Respiratory Health','Medicines for asthma and other respiratory conditions.'),(14,'Herbal Remedies','Natural and herbal medicine options.'),(15,'Weight Management','Medicines and supplements for weight loss or gain.'),(16,'Immunity Boosters','Supplements and medicines to enhance immunity.'),(17,'Dental Care','Medicines and products for oral health and dental care.'),(18,'Antibiotics','Medicines used to treat bacterial infections.'),(19,'Pain Relief','Medicines for reducing pain and inflammation.'),(20,'Cold and Cough Relief','Medicines for relieving cold, cough, and flu symptoms.'),(23,'aaaaaaaaaaa','aaaaaaaaaaaaaaa');
+INSERT INTO `categories` VALUES (1,'Vitamins and Supplements','Health supplements and multivitamins.'),(2,'Skin Care','Medicines and creams for skin care and treatments.'),(3,'Allergy Relief','Medicines to manage and treat allergies.'),(4,'Digestive Health','Medicines for digestive system care, such as antacids and laxatives.'),(5,'Heart Health','Medicines for cardiovascular health and blood pressure management.'),(6,'Diabetes Care','Medicines and supplies for managing diabetes.'),(7,'Eye Care','Drops and medicines for eye health and infections.'),(8,'Child Health','Medicines specifically formulated for children.'),(9,'Women\'s Health','Medicines for women-specific health conditions.'),(10,'Men\'s Health','Medicines for men-specific health conditions.'),(11,'Mental Health','Medicines for mental health and neurological disorders.'),(12,'First Aid','Medicines and items for immediate first aid care.'),(13,'Respiratory Health','Medicines for asthma and other respiratory conditions.'),(14,'Herbal Remedies','Natural and herbal medicine options.'),(15,'Weight Management','Medicines and supplements for weight loss or gain.'),(16,'Immunity Boosters','Supplements and medicines to enhance immunity.'),(17,'Dental Care','Medicines and products for oral health and dental care.'),(18,'Antibiotics','Medicines used to treat bacterial infections.'),(19,'Pain Relief','Medicines for reducing pain and inflammation.'),(20,'Cold and Cough Relief','Medicines for relieving cold, cough, and flu symptoms.');
 /*!40000 ALTER TABLE `categories` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -166,7 +167,7 @@ CREATE TABLE `chats` (
   PRIMARY KEY (`id`),
   KEY `customer_id` (`customer_id`),
   CONSTRAINT `chats_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=68 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -175,7 +176,7 @@ CREATE TABLE `chats` (
 
 LOCK TABLES `chats` WRITE;
 /*!40000 ALTER TABLE `chats` DISABLE KEYS */;
-INSERT INTO `chats` VALUES (1,3,'Hello, I have a question about my recent order.',1,1,'2025-04-23 16:39:37'),(2,3,'What is your question? I\'m here to help.',0,1,'2025-04-23 17:39:37'),(3,3,'I ordered Paracetamol but received Aspirin instead. Can you help?',1,1,'2025-04-24 16:39:37'),(4,3,'I apologize for the mix-up. We\'ll send the correct medicine right away.',0,1,'2025-04-24 17:09:37'),(5,3,'Thank you! When can I expect the delivery?',1,1,'2025-04-25 11:39:41'),(11,3,'Hello, I need help with a prescription upload.',1,1,'2025-04-25 10:40:40'),(12,3,'The site says my file format is not supported. What formats can I use?',1,1,'2025-04-25 11:40:41'),(13,3,'you need to upload jpeg picture files',0,1,'2025-04-25 10:41:20'),(14,3,'okay',0,1,'2025-04-25 10:50:22'),(15,51,'Can I get a refill on my previous prescription?',1,1,'2025-04-24 10:15:00'),(16,52,'Your prescription has been refilled and is ready for delivery.',0,1,'2025-04-24 11:00:00'),(17,51,'yes sure',0,1,'2025-04-25 11:12:12'),(18,51,'hello, you there?',0,1,'2025-04-25 11:33:54'),(19,52,'ji',0,1,'2025-04-25 11:35:16'),(20,51,'kire bhai',0,1,'2025-04-25 11:41:58'),(21,51,'hey',0,1,'2025-04-26 19:26:21'),(22,3,'jpeg',0,1,'2025-04-26 19:26:39');
+INSERT INTO `chats` VALUES (1,3,'Hello, I have a question about my recent order.',1,1,'2025-04-23 16:39:37'),(2,3,'What is your question? I\'m here to help.',0,1,'2025-04-23 17:39:37'),(3,3,'I ordered Paracetamol but received Aspirin instead. Can you help?',1,1,'2025-04-24 16:39:37'),(4,3,'I apologize for the mix-up. We\'ll send the correct medicine right away.',0,1,'2025-04-24 17:09:37'),(5,3,'Thank you! When can I expect the delivery?',1,1,'2025-04-25 11:39:41'),(11,3,'Hello, I need help with a prescription upload.',1,1,'2025-04-25 10:40:40'),(12,3,'The site says my file format is not supported. What formats can I use?',1,1,'2025-04-25 11:40:41'),(13,3,'you need to upload jpeg picture files',0,1,'2025-04-25 10:41:20'),(14,3,'okay',0,1,'2025-04-25 10:50:22'),(15,51,'Can I get a refill on my previous prescription?',1,1,'2025-04-24 10:15:00'),(16,52,'Your prescription has been refilled and is ready for delivery.',0,1,'2025-04-24 11:00:00'),(17,51,'yes sure',0,1,'2025-04-25 11:12:12'),(18,51,'hello, you there?',0,1,'2025-04-25 11:33:54'),(19,52,'ji',0,1,'2025-04-25 11:35:16'),(20,51,'kire bhai',0,1,'2025-04-25 11:41:58'),(21,51,'hey',0,1,'2025-04-26 19:26:21'),(22,3,'jpeg',0,1,'2025-04-26 19:26:39'),(23,3,'okay',1,1,'2025-04-30 17:21:35'),(24,3,'did you get your delivery?',0,1,'2025-04-30 17:22:23'),(25,3,'not yet',1,1,'2025-04-30 17:31:36'),(26,3,'than you for you patience sir',0,1,'2025-04-30 17:32:31'),(27,3,'.',1,1,'2025-04-30 17:47:31'),(28,3,'lesgoooooooooo',1,1,'2025-04-30 17:48:41'),(29,3,'.',0,1,'2025-04-30 18:16:28'),(30,3,'gg',0,1,'2025-04-30 18:34:57'),(31,3,'wp',1,1,'2025-04-30 18:35:17'),(32,3,'ty',0,1,'2025-04-30 18:42:46'),(33,3,'okay',1,1,'2025-04-30 18:49:36'),(34,3,'okay',1,1,'2025-04-30 18:54:46'),(35,3,'gg',1,1,'2025-04-30 18:54:52'),(36,3,'gg',1,1,'2025-04-30 18:54:52'),(37,3,'gg',1,1,'2025-04-30 18:54:52'),(38,3,'gg',1,1,'2025-04-30 18:54:53'),(39,3,'oye',1,1,'2025-04-30 18:56:03'),(40,3,'eeeeeeeeeeee',1,1,'2025-04-30 19:00:00'),(41,3,'oye',1,1,'2025-04-30 19:06:08'),(42,3,'thank god',1,1,'2025-04-30 19:07:14'),(43,3,'yes yes yes',0,1,'2025-04-30 19:11:48'),(44,3,'.',0,1,'2025-04-30 19:13:20'),(45,3,'hmm',0,1,'2025-04-30 19:15:04'),(46,3,'shei shei',0,1,'2025-04-30 19:15:09'),(47,50,'hello i want to ask something',1,1,'2025-04-30 19:20:48'),(48,50,'sure sir, how can i help?',0,1,'2025-04-30 19:21:22'),(49,50,'hello, this is staff',0,1,'2025-05-01 10:36:44'),(50,50,'damn',1,1,'2025-05-01 10:37:13'),(51,50,'yessir',0,1,'2025-05-02 11:29:21'),(52,50,'ji',0,1,'2025-05-02 11:31:30'),(53,50,'yooooooooooooo',1,1,'2025-05-02 11:31:44'),(54,50,'is it working?',0,1,'2025-05-02 11:38:12'),(55,50,'i think so',1,1,'2025-05-02 11:38:36'),(56,50,'ahem',0,1,'2025-05-02 11:45:43'),(57,50,'hu',0,1,'2025-05-02 11:45:57'),(58,50,'sure',0,1,'2025-05-02 11:47:14'),(59,50,'okay',1,1,'2025-05-02 11:47:33'),(60,50,'uf',1,1,'2025-05-02 11:58:54'),(61,50,'o',1,1,'2025-05-02 11:58:57'),(62,50,'siu',1,1,'2025-05-02 11:59:02'),(63,50,'eeeeeeeeeeee',1,1,'2025-05-02 12:10:30'),(64,50,'hehe',1,1,'2025-05-02 12:10:42'),(65,50,'lesgooo',1,1,'2025-05-02 12:10:46'),(66,50,'yeah it\'s fixed now',0,1,'2025-05-02 12:15:36'),(67,50,'perfecto',1,1,'2025-05-02 12:18:52');
 /*!40000 ALTER TABLE `chats` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -199,7 +200,7 @@ CREATE TABLE `customers` (
 
 LOCK TABLES `customers` WRITE;
 /*!40000 ALTER TABLE `customers` DISABLE KEYS */;
-INSERT INTO `customers` VALUES (3),(8),(46),(48),(49),(50),(51),(52);
+INSERT INTO `customers` VALUES (3),(8),(46),(48),(49),(50),(51),(52),(53);
 /*!40000 ALTER TABLE `customers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -246,7 +247,7 @@ CREATE TABLE `medicines` (
   PRIMARY KEY (`id`),
   KEY `category_id` (`category_id`),
   CONSTRAINT `medicines_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=69 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=130 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -255,8 +256,38 @@ CREATE TABLE `medicines` (
 
 LOCK TABLES `medicines` WRITE;
 /*!40000 ALTER TABLE `medicines` DISABLE KEYS */;
-INSERT INTO `medicines` VALUES (1,'Cefixime','Antibiotic for bacterial infections.',140,10,NULL,NULL,1),(2,'Azithromycin','Antibiotic for respiratory and skin infections.',180,0,NULL,NULL,1),(3,'Ciprofloxacin','Broad-spectrum antibiotic for various infections.',120,350,NULL,NULL,1),(4,'Napa Extra','Paracetamol for pain and fever relief.',30,500,NULL,NULL,2),(5,'Ace Plus','Pain reliever and fever reducer.',25,200,NULL,NULL,2),(6,'Synflex 550','Nonsteroidal anti-inflammatory drug for pain relief.',80,200,NULL,NULL,2),(7,'Histacin Syrup','Syrup for cough and cold symptoms.',50,200,NULL,NULL,3),(8,'Fexo 120','Tablet for cold and allergy symptoms.',80,150,NULL,NULL,3),(9,'Sinarest','Tablet for cold, runny nose, and headache.',70,180,NULL,NULL,3),(10,'Revital','Multivitamin and mineral supplement for overall health.',120,50,NULL,NULL,4),(11,'Cipcal 500','Calcium supplement for bone health.',80,100,NULL,NULL,4),(12,'Centrum','Multivitamin for adults.',150,40,NULL,NULL,4),(13,'Fusiderm Cream','Topical antibiotic for skin infections.',100,20,NULL,NULL,5),(14,'Betnovate-N','Cream for eczema and dermatitis.',90,30,NULL,NULL,5),(15,'Dermovate','Cream for psoriasis and other skin conditions.',120,25,NULL,NULL,5),(16,'Alatrol','Antihistamine for allergy relief.',50,200,NULL,NULL,6),(17,'Alergin','Tablet for managing allergies.',45,150,NULL,NULL,6),(18,'Histacin','Antihistamine for allergic reactions.',40,180,NULL,NULL,6),(19,'Seclo 20','Proton pump inhibitor for acidity and ulcers.',60,100,NULL,NULL,7),(20,'Neoceptin R','Antacid for indigestion and acid reflux.',40,120,NULL,NULL,7),(21,'Domperon','Tablet for nausea and vomiting.',50,150,NULL,NULL,7),(22,'Aspirin','Blood thinner to prevent heart attacks.',5,500,NULL,NULL,8),(23,'Clopidogrel','Medicine for heart disease and stroke prevention.',20,300,NULL,NULL,8),(24,'Atorvastatin','Cholesterol-lowering medication.',35,400,NULL,NULL,8),(25,'Metforal 500','Oral medicine for diabetes.',30,300,NULL,NULL,9),(26,'Gluformin','Metformin tablet for blood sugar control.',25,250,NULL,NULL,9),(27,'Insulatard','Insulin for diabetes management.',700,50,NULL,NULL,9),(28,'Tobradex','Eye drops for bacterial eye infections.',120,30,NULL,NULL,10),(29,'Refresh Tears','Eye drops for dry eyes.',200,20,NULL,NULL,10),(30,'Zaditen','Eye drops for allergy relief.',150,25,NULL,NULL,10),(31,'Paracil 120','Paracetamol syrup for fever and pain.',40,100,NULL,NULL,11),(32,'Histacin Syrup','Syrup for allergies in children.',50,90,NULL,NULL,11),(33,'Orsaline-N','Oral rehydration solution for dehydration.',10,300,NULL,NULL,11),(34,'Femisol','Tablet for menstrual pain relief.',80,100,NULL,NULL,12),(35,'Calcium D','Calcium and vitamin D supplement for women.',150,50,NULL,NULL,12),(36,'Primolut-N','Tablet for menstrual cycle management.',90,60,NULL,NULL,12),(37,'Menabol','Supplement for testosterone support.',120,40,NULL,NULL,13),(38,'Proviron','Medicine for male infertility.',500,20,NULL,NULL,13),(39,'Tadalafil','Medicine for erectile dysfunction.',600,15,NULL,NULL,13),(40,'Sertraline','Medicine for depression and anxiety.',250,30,NULL,NULL,14),(41,'Olanzapine','Tablet for bipolar disorder and schizophrenia.',300,20,NULL,NULL,14),(42,'Alprazolam','Medicine for anxiety and panic disorders.',200,25,NULL,NULL,14),(43,'Savlon Antiseptic Cream','Cream for minor wounds and cuts.',50,80,NULL,NULL,15),(44,'Betadine','Antiseptic solution for wound cleaning.',60,70,NULL,NULL,15),(45,'Hydrocortisone Cream','Cream for itch relief and inflammation.',100,30,NULL,NULL,15),(46,'Salbutamol','Inhaler for asthma relief.',250,60,NULL,NULL,16),(47,'Montelukast','Tablet for asthma and allergy management.',200,50,NULL,NULL,16),(48,'Ventolin','Nebulizer solution for respiratory conditions.',300,40,NULL,NULL,16),(49,'Arthralgia Oil','Herbal oil for joint pain relief.',150,40,NULL,NULL,17),(50,'Liveraid Capsule','Herbal liver support supplement.',100,30,NULL,NULL,17),(51,'Tulsi Tablet','Herbal tablet for immunity boosting.',90,50,NULL,NULL,17),(52,'Orlistat','Medicine for weight loss.',500,20,NULL,NULL,18),(53,'Slimfast','Weight loss supplement.',600,15,NULL,NULL,18),(54,'Fat Burner Plus','Herbal medicine for fat burning.',450,10,NULL,NULL,18),(55,'Zincovit','Zinc and multivitamin supplement.',80,100,NULL,NULL,19),(56,'Emergen-C','Vitamin C supplement for immune support.',120,50,NULL,NULL,19),(57,'Immunace','Supplement for enhancing immunity.',150,40,NULL,NULL,19),(58,'Sensodyne Toothpaste','Toothpaste for sensitive teeth.',200,60,NULL,NULL,20),(59,'Corsodyl Mouthwash','Mouthwash for gum care.',250,50,NULL,NULL,20),(60,'Colgate Herbal Toothpaste','Toothpaste with herbal extracts.',100,70,NULL,NULL,20),(61,'Monas 10','For asthma and allergic rhinitis',300,50,NULL,0,13),(63,'aaaab','aaab',300,5,NULL,0,19),(65,'Azmasol Inhaler','For asthma',240,100,NULL,0,13),(66,'aaaaaaaaaaaaaa','aaaaaaaaaaaaaaa',10,10,NULL,0,23),(67,'aaaaaa','aaaaaaab',300,10,NULL,0,23);
+INSERT INTO `medicines` VALUES (69,'Vitamin C 500mg','Boosts immunity and overall health.',8.99,100,NULL,NULL,1),(70,'Multivitamin Capsules','Daily nutritional supplement.',12.49,150,NULL,NULL,1),(71,'Omega-3 Fish Oil','Supports heart and brain health.',15,80,NULL,NULL,1),(72,'Hydrocortisone Cream','For skin irritations and rashes.',5.25,50,NULL,NULL,2),(73,'Acne Control Gel','Treats acne and pimples.',7.95,5,NULL,NULL,2),(74,'Moisturizing Lotion','Hydrates dry skin.',6.75,100,NULL,NULL,2),(75,'Cetirizine Tablets','Relieves allergy symptoms.',4.99,200,NULL,NULL,3),(76,'Loratadine 10mg','Non-drowsy allergy relief.',5.5,180,NULL,NULL,3),(77,'Allergy Eye Drops','Reduces eye itchiness from allergies.',6.3,90,NULL,NULL,3),(78,'Antacid Tablets','Neutralizes stomach acid.',3.2,100,NULL,NULL,4),(79,'Laxative Syrup','Relieves constipation.',4.75,70,NULL,NULL,4),(80,'Probiotic Capsules','Supports digestive balance.',11.25,60,NULL,NULL,4),(81,'Aspirin 81mg','Supports heart health.',2.99,120,NULL,NULL,5),(82,'Atorvastatin 20mg','Lowers cholesterol.',10.45,80,NULL,NULL,5),(83,'Blood Pressure Monitor','Tracks blood pressure.',25,20,NULL,NULL,5),(84,'Insulin Pen','Helps manage blood sugar.',30,40,NULL,NULL,6),(85,'Glucose Test Strips','For blood sugar testing.',18.5,100,NULL,NULL,6),(86,'Metformin 500mg','Controls blood sugar levels.',7.99,150,NULL,NULL,6),(87,'Lubricant Eye Drops','Relieves dry eyes.',4.5,70,NULL,NULL,7),(88,'Antibiotic Eye Drops','Treats eye infections.',6.25,60,NULL,NULL,7),(89,'Eye Vitamin Supplement','Supports vision health.',9.9,50,NULL,NULL,7),(90,'Paracetamol for Kids','Pain and fever relief for kids.',3.4,100,NULL,NULL,8),(91,'Multivitamin Syrup','Nutritional supplement for kids.',6.8,80,NULL,NULL,8),(92,'Cough Syrup for Kids','Soothes cough in children.',5.1,70,NULL,NULL,8),(93,'Iron Tablets','Supports women health.',4.95,90,NULL,NULL,9),(94,'Folic Acid 400mcg','Prenatal supplement.',3.75,120,NULL,NULL,9),(95,'Menstrual Pain Relief','Relieves period cramps.',6.6,80,NULL,NULL,9),(96,'Vitality Capsules','Supports male vitality.',20,30,NULL,NULL,10),(97,'Hair Growth Supplement','Promotes hair health.',12.5,45,NULL,NULL,10),(98,'Prostate Support','Supports prostate function.',14.3,50,NULL,NULL,10),(99,'Sertraline 50mg','Treats depression and anxiety.',9,60,NULL,NULL,11),(100,'Melatonin 3mg','Promotes better sleep.',7.2,80,NULL,NULL,11),(101,'Brain Boost Omega-3','Supports cognitive health.',13.75,40,NULL,NULL,11),(102,'Antiseptic Cream','Prevents infection in minor cuts.',3.95,100,NULL,NULL,12),(103,'Bandage Roll','Sterile wound dressing.',2.5,150,NULL,NULL,12),(104,'Burn Relief Spray','Cools and soothes burns.',4.8,60,NULL,NULL,12),(105,'Inhaler Salbutamol','Relieves asthma symptoms.',8,70,NULL,NULL,13),(106,'Cough Suppressant Syrup','Soothes persistent cough.',5.3,90,NULL,NULL,13),(107,'Steam Inhaler','Clears nasal congestion.',22,25,NULL,NULL,13),(108,'Tulsi Drops','Boosts immunity naturally.',4.2,60,NULL,NULL,14),(109,'Ashwagandha Capsules','Reduces stress.',10.25,50,NULL,NULL,14),(110,'Neem Tablets','Supports skin health.',5.6,70,NULL,NULL,14),(111,'Green Tea Extract','Boosts metabolism.',8.99,80,NULL,NULL,15),(112,'Meal Replacement Shake','Supports weight loss.',14.99,50,NULL,NULL,15),(113,'Appetite Suppressant','Controls hunger cravings.',11.75,30,NULL,NULL,15),(114,'Zinc Tablets','Supports immune function.',3.9,100,NULL,NULL,16),(115,'Elderberry Syrup','Natural immune support.',7.45,60,NULL,NULL,16),(116,'Vitamin D3 1000IU','Boosts immunity.',6.3,90,NULL,NULL,16),(117,'Toothache Relief Gel','Numbs dental pain.',4,100,NULL,NULL,17),(118,'Fluoride Mouthwash','Protects against cavities.',5.75,70,NULL,NULL,17),(119,'Sensitive Toothpaste','Reduces tooth sensitivity.',6.5,80,NULL,NULL,17),(120,'Amoxicillin 500mg','Treats bacterial infections.',8,100,NULL,NULL,18),(121,'Azithromycin 250mg','Broad-spectrum antibiotic.',9.5,80,NULL,NULL,18),(122,'Ciprofloxacin 500mg','Used for various infections.',7.6,90,NULL,NULL,18),(123,'Ibuprofen 400mg','Reduces pain and inflammation.',4.2,150,NULL,NULL,19),(124,'Paracetamol 500mg','Common pain reliever.',3.8,200,NULL,NULL,19),(125,'Diclofenac Gel','Topical pain relief.',6,60,NULL,NULL,19),(126,'Cold Relief Tablets','Relieves cold symptoms.',4.95,120,NULL,NULL,20),(127,'Cough Drops','Soothes sore throat.',2.99,200,NULL,NULL,20),(128,'Flu Care Syrup','Fights flu symptoms.',6.25,90,NULL,NULL,20);
 /*!40000 ALTER TABLE `medicines` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `notifications`
+--
+
+DROP TABLE IF EXISTS `notifications`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `notifications` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `staff_id` int(11) NOT NULL,
+  `message` varchar(500) NOT NULL,
+  `is_read` tinyint(1) DEFAULT NULL,
+  `timestamp` datetime DEFAULT NULL,
+  `notification_type` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `staff_id` (`staff_id`),
+  CONSTRAINT `notifications_ibfk_1` FOREIGN KEY (`staff_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `notifications`
+--
+
+LOCK TABLES `notifications` WRITE;
+/*!40000 ALTER TABLE `notifications` DISABLE KEYS */;
+INSERT INTO `notifications` VALUES (1,44,'napa is about get stocked out',1,'2025-05-01 10:50:38','stock_alert'),(2,44,'the user id 50 did not receive the order',1,'2025-05-01 10:51:01','order_issue'),(3,44,'Since, eid is coming, we will stop accepting orders from tomorrow',1,'2025-05-01 10:51:55','general'),(4,44,'hmm',1,'2025-05-01 10:56:01','general'),(5,44,'siu',1,'2025-05-02 14:37:55','stock_alert'),(6,44,'cr7',1,'2025-05-02 14:38:34','general'),(7,44,'lesgooooooooooooooooooooo',1,'2025-05-05 16:19:15','general'),(8,44,'nokia',1,'2025-05-05 16:29:01','general'),(9,44,'dawdasd',1,'2025-05-05 16:45:50','stock_alert'),(10,44,'adsasdawd',1,'2025-05-05 16:45:54','system_alert'),(11,44,'adwadasgwe',1,'2025-05-05 16:45:58','system_alert'),(12,44,'siuuuuuuuuuuuuuuuu\r\n',1,'2025-05-05 16:53:19','general'),(13,44,'1',1,'2025-05-05 16:53:21','stock_alert'),(14,44,'2',1,'2025-05-05 16:53:23','stock_alert'),(15,44,'3',1,'2025-05-05 16:53:24','stock_alert'),(16,44,'4',1,'2025-05-05 16:53:25','stock_alert'),(17,44,'5',1,'2025-05-05 16:53:27','stock_alert'),(18,44,'6',1,'2025-05-05 16:53:29','stock_alert'),(19,44,'7',1,'2025-05-05 17:04:20','stock_alert'),(20,44,'8',1,'2025-05-05 17:04:22','stock_alert'),(21,44,'9',1,'2025-05-05 17:04:24','stock_alert'),(22,44,'10',1,'2025-05-05 17:04:28','stock_alert'),(23,44,'11',1,'2025-05-05 17:07:31','stock_alert'),(24,44,'12',1,'2025-05-05 17:07:32','stock_alert'),(25,44,'13',1,'2025-05-05 17:07:34','stock_alert'),(26,44,'14',1,'2025-05-05 17:07:35','stock_alert'),(27,44,'last test\r\n',1,'2025-05-05 17:11:44','general');
+/*!40000 ALTER TABLE `notifications` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -390,7 +421,7 @@ CREATE TABLE `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -399,7 +430,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (3,'Md. Rafiul Islam','rafit991@gmail.com','rafit991','Zigatola, Dhanmondi','01845904415','customer','customer'),(4,'Test User','test@example.com','testpassword',NULL,NULL,'customer','customer'),(8,'test111','test1@gmail.com','test1234',NULL,'12345678901','customer','customer'),(10,'Rafit','rafit@admin.com','rafit123',NULL,NULL,'admin','admin'),(43,'wasi','wasi@admin.com','wasi1234','Shantinagar','0168234342','admin','admin'),(44,'Rafu','rafu@staff.com','rafu1234','Eije Ekhaneiiiiiii','121313241','staff','staff'),(46,'Shutupp','shut@up.com','12345678','Eije','1234567890','customer','customer'),(47,'Hello Ji','hello@ji.com','hello123','None','12345678901','customer','customer'),(48,'Lmao','lmao@gg.com','lmao1234','None','12345678901','customer','customer'),(49,'Abcd','ab@cd.com','12345678',NULL,'01812345679','customer','customer'),(50,'Skibidi','skibidi@rizz.com','skibidi123','','12369696969','customer','customer'),(51,'Raihan','raihan@gmail.com','raihan123','','01889122334','customer','customer'),(52,'Rafi','rafi@gmail.com','rafi1234','','01912234567','customer','customer');
+INSERT INTO `users` VALUES (3,'Md. Rafiul Islam','rafit991@gmail.com','rafit991','Zigatola, Dhanmondi','01845904415','customer','customer'),(4,'Test User','test@example.com','testpassword',NULL,NULL,'customer','customer'),(8,'test111','test1@gmail.com','test1234',NULL,'12345678901','customer','customer'),(10,'rafitboo','rafit@admin.com','rafit123','romjan bus','2345678910','admin','admin'),(43,'wasi','wasi@admin.com','wasi1234','Shantinagar','0168234342','admin','admin'),(44,'Rafu','rafu@staff.com','rafu1234','Eije Ekhaneiiiiiii','121313241','staff','staff'),(46,'Shutupp','shut@up.com','12345678','Eije','1234567890','customer','customer'),(47,'Hello Ji','hello@ji.com','hello123','None','12345678901','customer','customer'),(48,'Lmao','lmao@gg.com','lmao1234','None','12345678901','customer','customer'),(49,'Abcd','ab@cd.com','12345678',NULL,'01812345679','customer','customer'),(50,'Skibidi','skibidi@rizz.com','skibidi123','','12369696969','customer','customer'),(51,'Raihan','raihan@gmail.com','raihan123','','01889122334','customer','customer'),(52,'Rafi','rafi@gmail.com','rafi1234','','01912234567','customer','customer'),(53,'Lesgooooooooo','lsg@oo.com','lesgo123',NULL,'271378162197','customer','customer');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -412,4 +443,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-04-28 19:44:24
+-- Dump completed on 2025-05-08 19:54:45

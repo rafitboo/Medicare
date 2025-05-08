@@ -1,0 +1,50 @@
+{% extends 'staff/staff_base.html' %}
+
+{% block title %}Staff Dashboard{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/staff_dashboard.css') }}">
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <h1>Welcome, Staff</h1>
+            <p>Manage pharmacy operations efficiently</p>
+        </header>
+        <section class="dashboard-cards">
+            <a href="#" class="card">
+                <h3>Manage Orders</h3>
+                <p>View and process customer orders.</p>
+            </a>
+            <a href="{{ url_for('staff.notifications') }}" class="card">
+                <h3>Send Notifications</h3>
+                <p>Send notifications to the admin team.</p>
+            </a>
+            <a href="{{ url_for('staff.messages') }}" class="card">
+                <h3>Messages</h3>
+                <p>View and respond to customer messages.</p>
+            </a>
+            <a href="#" class="card">
+                <h3>Medicine List</h3>
+                <p>View and manage medicine inventory.</p>
+            </a>
+            <a href="{{ url_for('auth.logout') }}" class="card">
+                <h3>Logout</h3>
+                <p>Sign out of the staff panel.</p>
+            </a>
+        </section>
+    </div>
+    <script src="{{ url_for('static', filename='js/staff_dashboard.js') }}"></script>
+</body>
+</html>
+
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/staff_dashboard.js') }}"></script>
+{% endblock %}

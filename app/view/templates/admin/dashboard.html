@@ -19,21 +19,30 @@
             <p>Manage your pharmacy efficiently</p>
         </header>
         <section class="dashboard-cards">
-            <a href="{{ url_for('admin.manage_users') }}" class="card">
+            <a href="{{ url_for('admin_user.manage_users') }}" class="card">
+                <i class="fas fa-users"></i>
                 <h3>Manage Users</h3>
-                <p>View and manage registered users.</p>
+                <p>Add, edit, or remove users</p>
             </a>
-            <a href="{{ url_for('admin.manage_categories') }}" class="card">
+            <a href="{{ url_for('admin_inventory.manage_categories') }}" class="card">
+                <i class="fas fa-tags"></i>
                 <h3>Manage Categories</h3>
-                <p>View, add, edit, or delete categories in the system.</p>
+                <p>Organize medicine categories</p>
             </a>
-            <a href="{{ url_for('admin.manage_medicines') }}" class="card">
+            <a href="{{ url_for('admin_inventory.manage_medicines') }}" class="card">
+                <i class="fas fa-pills"></i>
                 <h3>Manage Medicines</h3>
-                <p>View, add, edit, or delete medicines in the inventory.</p>
+                <p>Update medicine inventory</p>
             </a>
-            <a href="{{ url_for('admin.messages') }}" class="card">
+            <a href="{{ url_for('admin_chat.messages') }}" class="card">
+                <i class="fas fa-comments"></i>
                 <h3>Messages</h3>
-                <p>View and respond to customer messages.</p>
+                <p>View customer conversations</p>
+            </a>
+            <a href="{{ url_for('admin_chat.notifications') }}" class="card">
+                <i class="fas fa-bell"></i>
+                <h3>Notifications</h3>
+                <p>Check staff notifications</p>
             </a>
             <a href="{{ url_for('auth.logout') }}" class="card">
                 <h3>Logout</h3>

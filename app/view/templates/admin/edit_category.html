@@ -10,7 +10,7 @@
             <div class="category-id">ID: {{ category.id }}</div>
         </div>
 
-        <form method="POST" class="edit-category-form">
+        <form method="POST" action="{{ url_for('admin_inventory.edit_category', category_id=category.id) }}" class="edit-category-form">
             <div class="form-group">
                 <label for="name">Category Name</label>
                 <input type="text" id="name" name="name" value="{{ category.name }}" required>
@@ -27,7 +27,7 @@
                 <button type="submit" class="btn btn-save">
                     <i class="fas fa-save"></i> Save Changes
                 </button>
-                <a href="{{ url_for('admin.manage_categories') }}" class="btn btn-cancel">
+                <a href="{{ url_for('admin_inventory.manage_categories') }}" class="btn btn-cancel">
                     <i class="fas fa-times"></i> Cancel
                 </a>
             </div>

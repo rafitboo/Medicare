@@ -53,6 +53,7 @@ body {
 .card:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    border-color: #3498db;
 }
 
 .card h3 {
@@ -70,27 +71,23 @@ body {
 
 /* Specific Card Colors */
 .card:nth-child(1):hover {
-    border-color: #2ecc71;
+    border-color: #2ecc71; /* Orders */
 }
 
 .card:nth-child(2):hover {
-    border-color: #e74c3c;
+    border-color: #e74c3c; /* Notifications */
 }
 
 .card:nth-child(3):hover {
-    border-color: #f39c12;
+    border-color: #f39c12; /* Messages */
 }
 
 .card:nth-child(4):hover {
-    border-color: #3498db;
+    border-color: #3498db; /* Medicine List */
 }
 
 .card:nth-child(5):hover {
-    border-color: #9b59b6;
-}
-
-.card:nth-child(6):hover {
-    border-color: #1abc9c;
+    border-color: #9b59b6; /* Logout */
 }
 
 /* Responsive Design */
@@ -124,4 +121,4 @@ body {
 .card {
     position: relative;
     overflow: hidden;
-}
+} 

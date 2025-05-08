@@ -1,6 +1,7 @@
 from . import db
 from .user import User
 from .chat import Chat
+from .notification import Notification
 
 class Staff(User):
     __tablename__ = 'staff'
@@ -28,22 +29,9 @@ class Staff(User):
     def viewLowStockAlerts(self):
         pass  # Implement low stock alerts logic
 
-    def notifyAdmin(self, medicine_id):
-        pass  # Notify admin about low stock
+    def notifyAdmin(self, message, notification_type='general'):
+        """Send a notification to admin."""
+        return Notification.create_notification(self.id, message, notification_type)
 
     def approvePrescription(self, prescription_id):
         pass  # Approve prescription logic
-
-    def respondToChat(self, customer_id, message):
-        """Respond to a customer message."""
-        return Chat.add_message(customer_id, message, is_from_customer=False)
-
-    def get_all_customer_conversations(self):
-        """Get all customer IDs who have conversations."""
-        return Chat.get_customer_conversations()
-
-    def get_customer_conversation(self, customer_id):
-        """Get the conversation with a specific customer."""
-        # Mark messages as read when staff views them
-        Chat.mark_as_read(customer_id)
-        return Chat.get_conversation(customer_id)

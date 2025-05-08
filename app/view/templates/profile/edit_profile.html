@@ -1,0 +1,74 @@
+{% if user.role == 'admin' %}
+    {% extends "admin/admin_base.html" %}
+{% elif user.role == 'staff' %}
+    {% extends "staff/staff_base.html" %}
+{% else %}
+    {% extends "base.html" %}
+{% endif %}
+
+{% block title %}Edit Profile - MediCare{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="profile-header">
+        <h1>Edit Profile</h1>
+        <p>Update your personal information</p>
+    </div>
+
+    <form class="profile-form" method="POST" action="{{ url_for('auth.edit_profile') }}">
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" value="{{ user.username }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" value="{{ user.email }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone" value="{{ user.phone }}">
+        </div>
+
+        <div class="form-group">
+            <label for="address">Address</label>
+            <textarea id="address" name="address" rows="3">{{ user.address }}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="current_password">Current Password</label>
+            <input type="password" id="current_password" name="current_password" required>
+        </div>
+
+        <div class="form-group">
+            <label for="new_password">New Password (leave blank to keep current)</label>
+            <input type="password" id="new_password" name="new_password">
+        </div>
+
+        <div class="form-group">
+            <label for="confirm_password">Confirm New Password</label>
+            <input type="password" id="confirm_password" name="confirm_password">
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">Save Changes</button>
+            {% if user.role == 'admin' %}
+                <a href="{{ url_for('admin_user.dashboard') }}" class="btn-secondary">Cancel</a>
+            {% elif user.role == 'staff' %}
+                <a href="{{ url_for('staff.dashboard') }}" class="btn-secondary">Cancel</a>
+            {% else %}
+                <a href="{{ url_for('customer.dashboard') }}" class="btn-secondary">Cancel</a>
+            {% endif %}
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/profile.js') }}"></script>
+{% endblock %} 

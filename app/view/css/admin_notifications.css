@@ -1,0 +1,198 @@
+/* Main Container */
+.notifications-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Header Styles */
+.notifications-header {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.notifications-header h1 {
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.notifications-header p {
+    color: #7f8c8d;
+    margin: 0;
+}
+
+/* Actions */
+.notifications-actions {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-primary {
+    background-color: #4e73df;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    color: white;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: #3a5bbf;
+    transform: translateY(-1px);
+}
+
+/* Mark as Read Button */
+.btn-outline-primary {
+    background-color: transparent;
+    border: 1px solid #4e73df;
+    color: #4e73df;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.btn-outline-primary:hover {
+    background-color: #4e73df;
+    color: white;
+    transform: translateY(-1px);
+}
+
+.btn-outline-primary i {
+    font-size: 0.875rem;
+}
+
+/* Notifications List */
+.notifications-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.notification-item {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-left: 4px solid #e9ecef;
+    transition: all 0.3s ease;
+}
+
+.notification-item.unread {
+    border-left-color: #4e73df;
+    background-color: #f8f9fe;
+}
+
+.notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.notification-meta {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.notification-type {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.notification-type.stock_alert {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.notification-type.order_issue {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.notification-type.system_alert {
+    background-color: #cce5ff;
+    color: #004085;
+}
+
+.notification-type.general {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.notification-time {
+    color: #6c757d;
+    font-size: 0.8rem;
+}
+
+.notification-content {
+    color: #2c3e50;
+}
+
+.notification-message {
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+.notification-sender {
+    color: #6c757d;
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
+/* No Notifications State */
+.no-notifications {
+    text-align: center;
+    padding: 40px 20px;
+    color: #6c757d;
+}
+
+.no-notifications i {
+    font-size: 40px;
+    margin-bottom: 10px;
+    opacity: 0.5;
+}
+
+.no-notifications p {
+    margin: 0;
+    font-size: 15px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .notifications-container {
+        padding: 15px;
+    }
+    
+    .notification-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .notification-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+} 

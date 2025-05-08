@@ -1,5 +1,5 @@
 from . import db
-from datetime import datetime
+from datetime import datetime, timedelta
 
 class Chat(db.Model):
     __tablename__ = 'chats'
@@ -10,7 +10,7 @@ class Chat(db.Model):
     is_read = db.Column(db.Boolean, default=False)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     
-    # Relationship with the user (customer) - remove the backref since it's defined in User model
+    # Relationship with the user (customer)
     customer = db.relationship('User', foreign_keys=[customer_id])
     
     @classmethod
@@ -53,6 +53,39 @@ class Chat(db.Model):
         except Exception:
             db.session.rollback()
             return False
+
+    @classmethod
+    def get_customer_conversation_summary(cls):
+        """Get a summary of all customer conversations with latest message and unread count."""
+        customer_ids = cls.get_customer_conversations()
+        conversations = []
+        
+        for cust_id in customer_ids:
+            latest_message = cls.query.filter_by(customer_id=cust_id).order_by(cls.timestamp.desc()).first()
+            unread_count = cls.query.filter_by(customer_id=cust_id, is_read=False, is_from_customer=True).count()
+            
+            if latest_message:
+                conversations.append({
+                    'customer_id': cust_id,
+                    'latest_message': latest_message.message,
+                    'timestamp': latest_message.timestamp + timedelta(hours=6),
+                    'unread_count': unread_count,
+                    'original_timestamp': latest_message.timestamp
+                })
+        
+        return sorted(conversations, key=lambda x: x['original_timestamp'], reverse=True)
+
+    @classmethod
+    def get_customer_conversation_with_timestamps(cls, customer_id):
+        """Get conversation with a customer including adjusted timestamps and mark messages as read."""
+        # First mark messages as read
+        cls.mark_as_read(customer_id)
+        
+        # Then get the conversation with adjusted timestamps
+        conversation = cls.get_conversation(customer_id)
+        for msg in conversation:
+            msg.bd_timestamp = msg.timestamp + timedelta(hours=6)
+        return conversation
 
     def sendMessage(self):
         pass  # Send message logic

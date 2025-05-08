@@ -19,7 +19,7 @@
             </div>
             <nav class="main-nav">
                 <ul class="nav-list">
-                    <li class="nav-item"><a href="{{ url_for('admin_user.dashboard') }}" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="{{ url_for('staff.dashboard') }}" class="nav-link">Home</a></li>
                     <li class="nav-item"><a href="{{ url_for('auth.edit_profile') }}" class="nav-link">Profile</a></li>
                     <li class="nav-item"><a href="#" class="nav-link">About</a></li>
                     <li class="nav-item"><a href="#" class="nav-link">Contact</a></li>
@@ -52,7 +52,7 @@
     
     <main class="main-content">
         {% block content %}
-        <!-- Page-specific content -->
+        <!-- Page-specific content will go here -->
         {% endblock %}
     </main>
     
@@ -61,11 +61,11 @@
             <div class="footer-section">
                 <h3 class="footer-heading">Quick Links</h3>
                 <ul class="footer-links">
-                    <li><a href="{{ url_for('admin_user.dashboard') }}">Home</a></li>
-                    <li><a href="#">Products</a></li>
-                    <li><a href="#">Doctors</a></li>
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Contact</a></li>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/products">Products</a></li>
+                    <li><a href="/doctors">Doctors</a></li>
+                    <li><a href="/about">About Us</a></li>
+                    <li><a href="/contact">Contact</a></li>
                 </ul>
             </div>
             <div class="footer-section">
@@ -80,8 +80,8 @@
             <div class="footer-section">
                 <h3 class="footer-heading">Contact Us</h3>
                 <address>
-                    <p><i class="fas fa-map-marker-alt"></i> BRAC University, Merul Badda, Dhaka</p>
-                    <p><i class="fas fa-phone"></i> +8801717171717</p>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 Health Street, Medical City</p>
+                    <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
                     <p><i class="fas fa-envelope"></i> info@medicare.com</p>
                 </address>
             </div>
@@ -96,7 +96,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2025 MediCare Online Pharmacy. All rights reserved.</p>
+            <p>&copy; 2023 MediCare Online Pharmacy. All rights reserved.</p>
             <div class="legal-links">
                 <a href="#">Privacy Policy</a>
                 <a href="#">Terms of Service</a>
