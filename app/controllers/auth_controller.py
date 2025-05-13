@@ -30,35 +30,13 @@ def signup_page():
     confirm_password = request.form.get('confirm_password', '') 
     terms = request.form.get('terms')
 
-    if not all([username, email, phone, password, confirm_password]):
-        flash('All fields are required', 'error')
+    user, error = User.signup(username, email, phone, password, confirm_password, terms)
+    if error:
+        flash(error, 'error')
         return redirect(url_for('auth.signup_page'))
 
-    if not terms:
-        flash('You must agree to the terms', 'error')
-        return redirect(url_for('auth.signup_page'))
-
-    if password != confirm_password:
-        flash('Passwords do not match!', 'error')
-        return redirect(url_for('auth.signup_page'))
-
-    if len(password) < 8:
-        flash('Password must be at least 8 characters', 'error')
-        return redirect(url_for('auth.signup_page'))
-
-    try:
-        new_user, error = User.register(username, email, phone, password)
-        if error:
-            flash(error, 'error')
-            return redirect(url_for('auth.signup_page'))
-
-        flash('Account created! Please login', 'success')
-        return redirect(url_for('auth.login_page'))
-
-    except Exception as e:
-        db.session.rollback()
-        flash('Account creation failed', 'error')
-        return redirect(url_for('auth.signup_page'))
+    flash('Account created! Please login', 'success')
+    return redirect(url_for('auth.login_page'))
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login_page():
@@ -68,13 +46,9 @@ def login_page():
     email = request.form.get('email', '').strip().lower()
     password = request.form.get('password', '').strip()
 
-    if not email or not password:
-        flash('Email and password are required', 'error')
-        return redirect(url_for('auth.login_page'))
-
-    user = User.login(email, password)
-    if not user:
-        flash('Invalid email or password', 'error')
+    user, error = User.login(email, password)
+    if error:
+        flash(error, 'error')
         return redirect(url_for('auth.login_page'))
 
     session['user_id'] = user.id
