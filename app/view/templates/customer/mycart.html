@@ -61,7 +61,7 @@
     <div class="cart-summary">
         <div class="summary-content">
             <h3>Cart Total: <span id="cart-total">${{ "%.2f"|format(total) }}</span></h3>
-            <button class="checkout-btn">Proceed to Checkout</button>
+            <a href="{{ url_for('customer.checkout') }}" class="checkout-btn">Proceed to Checkout</a>
             <a href="{{ url_for('customer.dashboard') }}" class="continue-shopping">Continue Shopping</a>
         </div>
     </div>

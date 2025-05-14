@@ -12,7 +12,7 @@
     <header class="main-header">
         <div class="header-container">
             <div class="logo-container">
-                <a href="#" class="logo-link">
+                <a href="/dashboard" class="logo-link">
                     <img src="{{ url_for('static', filename='images/logo.png') }}" alt="MediCare Logo" class="logo">
                     <span class="logo-text">MediCare</span>
                 </a>
@@ -24,6 +24,7 @@
                     <li class="nav-item"><a href="#" class="nav-link">Doctors</a></li>
                     <li class="nav-item"><a href="#" class="nav-link">About</a></li>
                     <li class="nav-item"><a href="{{ url_for('customer.customer_messages') }}" class="nav-link">Support Messages</a></li>
+                    <li class="nav-item"><a href="{{ url_for('customer.order_history') }}" class="nav-link">Order History</a></li>
                 </ul>
             </nav>
             <div class="auth-buttons">

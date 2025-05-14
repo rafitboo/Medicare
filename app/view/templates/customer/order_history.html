@@ -1,0 +1,275 @@
+{% extends "base.html" %}
+
+{% block title %}Order History{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Your Order History</h2>
+
+    {% if orders %}
+        <div class="row">
+            {% for order in orders %}
+                <div class="col-md-12 mb-4">
+                    <div class="card order-card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Order #{{ order.id }}</h5>
+                            <p><strong>Delivery Status:</strong>
+                            <span class="status-badge 
+                                {% if order.status == 'Delivered' %}status-delivered
+                                {% elif order.status == 'Dispatched for Delivery' %}status-dispatched
+                                {% elif order.status == 'Pending' %}status-pending
+                                {% endif %}">
+                                {{ order.status }}
+                            </span>
+                            </p>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>Order Date:</strong> {{ order.order_date.strftime('%B %d, %Y') }}</p>
+                                    <p><strong>Payment Method:</strong> {{ order.payment_method }}</p>
+                                    <p><strong>Payment Status:</strong> 
+                                        <span class="status-text">{{ order.payment_status }}</span>
+                                    </p>
+                                </div>
+                                <div class="col-md-6 text-md-end">
+                                    <h4 class="total-price">Total: ${{ "%.2f"|format(order.total_price) }}</h4>
+                                </div>
+                            </div>
+
+                            <hr>
+
+                            <h6 class="mb-3">Order Details</h6>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Medicine</th>
+                                            <th>Quantity</th>
+                                            <th>Price</th>
+                                            <th>Subtotal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for detail in order.order_details %}
+                                            <tr>
+                                                <td>{{ detail.medicine.name }}</td>
+                                                <td>{{ detail.quantity }}</td>
+                                                <td>${{ "%.2f"|format(detail.price) }}</td>
+                                                <td>${{ "%.2f"|format(detail.price * detail.quantity) }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center mt-5">
+            <h3 class="no-orders-title">No Orders Found</h3>
+            <p class="no-orders-text">You haven't placed any orders yet.</p>
+            <a href="{{ url_for('customer.dashboard') }}" class="btn btn-primary shop-now-btn">
+                <i class="fas fa-shopping-cart me-2"></i> Start Shopping
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .order-card {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s;
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .order-card:hover {
+        transform: translateY(-2px);
+    }
+
+    .total-price {
+        color: #2c3e50;
+        font-weight: 600;
+        font-size: 1.5rem;
+    }
+
+    .badge {
+        padding: 10px 15px;
+        font-size: 1.2rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        border-radius: 6px;
+        text-transform: uppercase;
+    }
+
+    .bg-success {
+        background-color: #28a745 !important;
+    }
+
+    .bg-warning {
+        background-color: #ffc107 !important;
+    }
+
+    .bg-secondary {
+        background-color: #6c757d !important;
+    }
+
+    .card-header {
+        padding: 1.25rem;
+        align-items: center;
+    }
+
+    .table {
+        margin-bottom: 0;
+        font-size: 1.1rem;
+    }
+
+    .table th {
+        background-color: #f8f9fa;
+        font-size: 1.2rem;
+    }
+
+    .card-header h5 {
+        font-size: 1.4rem;
+    }
+
+    .card-body p {
+        font-size: 1.1rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .container {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    h2.text-center {
+        font-size: 2.2rem;
+        margin-bottom: 2rem;
+        color: #2c3e50;
+    }
+
+    h6.mb-3 {
+        font-size: 1.3rem;
+        margin: 1.5rem 0;
+    }
+
+    .table-responsive {
+        margin: 0 auto;
+    }
+
+    .delivery-status {
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        display: inline-block;
+        margin-left: 10px;
+    }
+
+    /* Status Badge Styles */
+    .status-badge {
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        display: inline-block;
+        margin-left: 10px;
+        color: white;
+    }
+
+    .status-delivered {
+        background-color: #28a745;
+    }
+
+    .status-dispatched {
+        background-color: #ffc107;
+        color: #000; /* Dark text for better visibility on yellow */
+    }
+
+    .status-pending {
+        background-color: #dc3545;
+    }
+
+    /* Payment Status Style */
+    .status-text {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #2c3e50;
+    }
+
+
+    .text-success {
+        color: #28a745 !important;
+    }
+
+    .text-warning {
+        color: #ffc107 !important;
+    }
+
+    .text-danger {
+        color: #dc3545 !important;
+    }
+
+    .bg-success-light {
+        background-color: rgba(40, 167, 69, 0.15);
+    }
+
+    .bg-warning-light {
+        background-color: rgba(255, 193, 7, 0.15);
+    }
+
+    .bg-danger-light {
+        background-color: rgba(220, 53, 69, 0.15);
+    }
+
+    .card-header strong {
+        font-size: 1.1rem;
+        color: #2c3e50;
+    }
+
+    /* No Orders Found Styles */
+    .no-orders-title {
+        font-size: 2.5rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 1rem;
+    }
+
+    .no-orders-text {
+        font-size: 1.3rem;
+        color: #6c757d;
+        margin-bottom: 2rem;
+    }
+
+    .shop-now-btn {
+        padding: 1rem 2.5rem;
+        font-size: 1.2rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        background-color: #007bff;
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 123, 255, 0.2);
+        transition: all 0.3s ease;
+        color: #ffffff;  /* Add this line for white text */
+    }
+
+    .shop-now-btn:hover {
+        background-color: #0056b3;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 8px rgba(0, 123, 255, 0.3);
+        color: #ffffff;  /* Keep text white on hover */
+    }
+
+    .shop-now-btn i {
+        margin-right: 10px;
+    }
+</style>
+{% endblock %}

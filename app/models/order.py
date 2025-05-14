@@ -7,13 +7,42 @@ class Order(db.Model):
     customer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     order_date = db.Column(db.DateTime, default=datetime.utcnow)
     total_price = db.Column(db.Float, nullable=False)
-    status = db.Column(db.String(50), nullable=False)
-    payment_method = db.Column(db.String(50), nullable=False)
-    payment_status = db.Column(db.String(50), nullable=False)
-    transaction_id = db.Column(db.String(100), nullable=True)
+    status = db.Column(db.String(20), default='Pending')
+    payment_method = db.Column(db.String(50), nullable=False, default='Cash on Delivery')
+    payment_status = db.Column(db.String(50), nullable=False, default='Pending')
+    transaction_id = db.Column(db.String(50), nullable=True)
+    bkash_number = db.Column(db.String(11), nullable=True)
 
     order_details = db.relationship('OrderDetails', backref='order', lazy=True)
 
+    @classmethod
+    def create(cls, customer_id, total_amount, payment_method='Cash on Delivery'):
+        try:
+            # Input validation
+            if not customer_id:
+                raise ValueError("Customer ID is required")
+            if not total_amount:
+                raise ValueError("Total amount is required")
+            
+            # Create new order with all required fields
+            order = cls(
+                customer_id=customer_id,
+                total_price=float(total_amount),
+                payment_method=payment_method,
+                payment_status='Pending',
+                status='Pending',
+                order_date=datetime.utcnow()
+            )
+
+            # Add and commit to database
+            db.session.add(order)
+            db.session.commit()
+            return order
+
+        except Exception as e:
+            db.session.rollback()
+            return None
+        
     def confirmPayment(self):
         pass  # Confirm the payment for an order
 
