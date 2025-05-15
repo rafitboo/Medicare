@@ -179,7 +179,7 @@ def place_order():
 
             order = Order.create(
                 customer_id=customer.id,
-                total_amount=total,
+                total_price=total,
                 payment_method=payment_method
             )
 
