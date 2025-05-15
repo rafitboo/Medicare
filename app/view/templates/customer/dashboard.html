@@ -48,7 +48,7 @@
                 <h3>{{ medicine.name }}</h3>
                 <p class="description">{{ medicine.description }}</p>
                 <div class="price-stock">
-                    <span class="price">${{ "%.2f"|format(medicine.price) }}</span>
+                    <span class="price">৳{{ "%.2f"|format(medicine.price) }}</span>
                     <span class="stock">{{ medicine.stock }} in stock</span>
                 </div>
                 <div class="expiry-date">
