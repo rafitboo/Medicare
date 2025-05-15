@@ -23,7 +23,6 @@ class Admin(User):
         super().__init__(**kwargs)
 
     def add_medicine(self, name, description, category_id, price, stock):
-        """Add a new medicine."""
         existing_medicine = Medicine.query.filter_by(name=name).first()
         if existing_medicine:
             return False, "Medicine already exists."
@@ -44,7 +43,6 @@ class Admin(User):
             return False, f"Error adding medicine: {e}"
 
     def update_medicine(self, medicine_id, name, description, category_id, price, stock):
-        """Update an existing medicine."""
         medicine = Medicine.query.get(medicine_id)
         if not medicine:
             return False, "Medicine not found."
@@ -63,7 +61,6 @@ class Admin(User):
             return False, f"Error updating medicine: {e}"
 
     def delete_medicine(self, medicine_id):
-        """Delete a medicine."""
         medicine = Medicine.query.get(medicine_id)
         if not medicine:
             return False, "Medicine not found."
@@ -123,7 +120,6 @@ class Admin(User):
             return False
 
     def add_user(self, username, email, phone, role='customer', address=None, password=None):
-        """Add a new user and update the role-specific table with minimal redundancy."""
 
         if User.query.filter((User.username == username) | (User.email == email)).first():
             return False, "A user with this username or email already exists."
@@ -155,7 +151,7 @@ class Admin(User):
             return False, f"Error adding user: {e}"
 
     def add_category(self, name, description):
-        """Add a new category."""
+
         existing_category = Category.query.filter_by(name=name).first()
         if existing_category:
             return False, "Category already exists."
@@ -170,7 +166,7 @@ class Admin(User):
             return False, f"Error adding category: {e}"
 
     def update_category(self, category_id, name, description):
-        """Update an existing category."""
+
         category = Category.query.get(category_id)
         if not category:
             return False, "Category not found."
@@ -185,7 +181,7 @@ class Admin(User):
             return False, f"Error updating category: {e}"
 
     def delete_category(self, category_id):
-        """Delete a category."""
+
         category = Category.query.get(category_id)
         if not category:
             return False, "Category not found."
