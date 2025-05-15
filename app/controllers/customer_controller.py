@@ -186,7 +186,7 @@ def place_order():
             if not order:
                 return jsonify({'success': False, 'error': 'Failed to create order'}), 400
 
-            if payment_type == 'bkash':
+            if order.payment_method == 'bkash':
                 order.bkash_number = data.get('bkash_number')
                 order.transaction_id = data.get('transaction_id')
                 order.payment_status = 'Pending'
