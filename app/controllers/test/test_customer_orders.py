@@ -200,8 +200,8 @@ class TestCustomerOrders:
                 customer_id=auth_customer.id,
                 total_price=test_medicine.price * 2,
                 payment_method='Cash on Delivery' if i == 0 else 'bKash',
-                status='Delivered' if i == 0 else 'Pending',
-                payment_status='Paid' if i == 0 else 'Pending',
+                status='Delivered' if i == 1 else 'Pending',
+                payment_status='Paid' if i == 1 else 'Pending',
                 order_date=datetime.now() - timedelta(days=i)
             )
             self.db.session.add(order)
