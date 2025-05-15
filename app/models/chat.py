@@ -10,7 +10,6 @@ class Chat(db.Model):
     is_read = db.Column(db.Boolean, default=False)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     
-    # Relationship with the user (customer)
     customer = db.relationship('User', foreign_keys=[customer_id])
     
     @classmethod
@@ -78,17 +77,10 @@ class Chat(db.Model):
     @classmethod
     def get_customer_conversation_with_timestamps(cls, customer_id):
         """Get conversation with a customer including adjusted timestamps and mark messages as read."""
-        # First mark messages as read
+
         cls.mark_as_read(customer_id)
         
-        # Then get the conversation with adjusted timestamps
         conversation = cls.get_conversation(customer_id)
         for msg in conversation:
             msg.bd_timestamp = msg.timestamp + timedelta(hours=6)
         return conversation
-
-    def sendMessage(self):
-        pass  # Send message logic
-
-    def receiveMessage(self):
-        pass  # Receive message logic
