@@ -170,11 +170,13 @@ def place_order():
             user_id = get_current_user_id()
             customer = Customer.query.get(user_id)
             cart_items, total, _ = customer.get_cart_data()
-
+            med_ids = Cart.query.filter_by(customer_id=user_id).with_entities(Cart.medicine_id).all()
+            
             if not cart_items:
                 return jsonify({'success': False, 'error': 'Cart is empty'}), 400
 
-            # Create order
+            stockUpdate = Medicine.updateStock(med_ids, cart_items)
+
             order = Order.create(
                 customer_id=customer.id,
                 total_amount=total,
@@ -184,7 +186,6 @@ def place_order():
             if not order:
                 return jsonify({'success': False, 'error': 'Failed to create order'}), 400
 
-            # Update payment details for bKash
             if payment_type == 'bkash':
                 order.bkash_number = data.get('bkash_number')
                 order.transaction_id = data.get('transaction_id')

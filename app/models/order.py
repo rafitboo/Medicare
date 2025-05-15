@@ -24,7 +24,6 @@ class Order(db.Model):
             if not total_amount:
                 raise ValueError("Total amount is required")
             
-            # Create new order with all required fields
             order = cls(
                 customer_id=customer_id,
                 total_price=float(total_amount),
@@ -34,7 +33,6 @@ class Order(db.Model):
                 order_date=datetime.utcnow()
             )
 
-            # Add and commit to database
             db.session.add(order)
             db.session.commit()
             return order

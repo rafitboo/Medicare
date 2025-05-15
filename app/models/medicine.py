@@ -18,3 +18,17 @@ class Medicine(db.Model):
 
     def isNearExpiry(self):
         return self.expiry_date and self.expiry_date < datetime.utcnow()
+
+    def updateStock(med_ids, cart_items):
+        for med_id in med_ids:
+            medicine = Medicine.query.get(med_id)
+            for item in cart_items:
+                quantity = item.quantity
+                if medicine.id == item.medicine_id:
+                    if quantity > medicine.stock:
+                        return None, f"Only {medicine.stock} items available in stock!"
+                    medicine.stock -= quantity
+                    db.session.commit()
+                else:
+                    return None, "Medicine not found"
+        return True
