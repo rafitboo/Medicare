@@ -16,7 +16,7 @@ class Order(db.Model):
     order_details = db.relationship('OrderDetails', backref='order', lazy=True)
 
     @classmethod
-    def create(cls, customer_id, total_amount, payment_method='Cash on Delivery'):
+    def create(cls, customer_id, total_amount, payment_method='Cash on Delivery', status='Pending', payment_status='Pending', order_date=datetime.utcnow()):
         try:
             # Input validation
             if not customer_id:
@@ -28,9 +28,9 @@ class Order(db.Model):
                 customer_id=customer_id,
                 total_price=float(total_amount),
                 payment_method=payment_method,
-                payment_status='Pending',
-                status='Pending',
-                order_date=datetime.utcnow()
+                payment_status=payment_status,
+                status=status,
+                order_date=order_date
             )
 
             db.session.add(order)
