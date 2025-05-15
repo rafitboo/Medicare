@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Medicare</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/about.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1>About Medicare</h1>
+        
+        <div class="card">
+            <p>{{ about_info.description }}</p>
+        </div>
+
+        <h2>Contact Info</h2>
+        <div class="card">
+            <div class="contact-info">
+                <div class="contact-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <strong>Address:</strong> {{ about_info.address }}
+                </div>
+                <div class="contact-item">
+                    <i class="fas fa-phone"></i>
+                    <strong>Hotline:</strong> {{ about_info.hotline }}
+                </div>
+                <div class="contact-item">
+                    <i class="fab fa-whatsapp"></i>
+                    <strong>WhatsApp:</strong> {{ about_info.whatsapp }}
+                </div>
+                <div class="contact-item">
+                    <i class="fab fa-facebook"></i>
+                    <strong>Facebook:</strong> <a href="{{ about_info.facebook }}" target="_blank">Facebook</a>
+                </div>
+                <div class="contact-item">
+                    <i class="fab fa-instagram"></i>
+                    <strong>Instagram:</strong> <a href="{{ about_info.instagram }}" target="_blank">Instagram</a>
+                </div>
+                <div class="contact-item">
+                    <i class="fab fa-x-twitter"></i>
+                    <strong>X Page:</strong> <a href="{{ about_info.x_page }}" target="_blank">X</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="mission-vision">
+            <div class="card">
+                <h2>Our Mission</h2>
+                <p>{{ about_info.mission }}</p>
+            </div>
+
+            <div class="card">
+                <h2>Our Vision</h2>
+                <p>{{ about_info.vision }}</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>
+
