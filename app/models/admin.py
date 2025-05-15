@@ -5,6 +5,8 @@ from .category import Category
 from .customer import Customer
 from .staff import Staff
 from .chat import Chat
+from .cart import Cart
+from .order import Order
 
 class Admin(User):
     __tablename__ = 'admins'
@@ -82,8 +84,6 @@ class Admin(User):
             return True
         return False
 
-    def viewAllOrders(self):
-        pass  
 
     def edit_user(self, user_id, name, email, role, address, phone):
         user = User.query.get(user_id)
@@ -106,16 +106,21 @@ class Admin(User):
 
     def delete_user(self, user_id):
         user = User.query.get(user_id)
-        if user:
-            try:
-                db.session.delete(user)
-                db.session.commit()
-                return True
-            except Exception as e:
-                db.session.rollback()
-                print(f"Error deleting user: {e}")
-                return False
-        return False
+        if not user:
+            return False
+
+        try:
+            Cart.query.filter_by(customer_id=user_id).delete()
+            Chat.query.filter_by(customer_id=user_id).delete()
+            Order.query.filter_by(customer_id=user_id).delete()
+
+            db.session.delete(user)
+            db.session.commit()
+            return True
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error deleting user: {e}")
+            return False
 
     def add_user(self, username, email, phone, role='customer', address=None, password=None):
         """Add a new user and update the role-specific table with minimal redundancy."""
