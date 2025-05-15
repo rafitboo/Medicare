@@ -14,7 +14,6 @@ class Chat(db.Model):
     
     @classmethod
     def add_message(cls, customer_id, message, is_from_customer=True):
-        """Add a new message to the chat."""
         new_message = cls(
             customer_id=customer_id,
             message=message,
@@ -30,19 +29,16 @@ class Chat(db.Model):
     
     @classmethod
     def get_customer_conversations(cls):
-        """Get all unique customer IDs with messages."""
         from sqlalchemy import distinct
         customer_ids = db.session.query(distinct(cls.customer_id)).all()
         return [id[0] for id in customer_ids]
     
     @classmethod
     def get_conversation(cls, customer_id):
-        """Get entire conversation with a specific customer."""
         return cls.query.filter_by(customer_id=customer_id).order_by(cls.timestamp).all()
     
     @classmethod
     def mark_as_read(cls, customer_id):
-        """Mark all messages from a customer as read."""
         unread_messages = cls.query.filter_by(customer_id=customer_id, is_read=False).all()
         for message in unread_messages:
             message.is_read = True
@@ -55,7 +51,6 @@ class Chat(db.Model):
 
     @classmethod
     def get_customer_conversation_summary(cls):
-        """Get a summary of all customer conversations with latest message and unread count."""
         customer_ids = cls.get_customer_conversations()
         conversations = []
         
@@ -76,8 +71,6 @@ class Chat(db.Model):
 
     @classmethod
     def get_customer_conversation_with_timestamps(cls, customer_id):
-        """Get conversation with a customer including adjusted timestamps and mark messages as read."""
-
         cls.mark_as_read(customer_id)
         
         conversation = cls.get_conversation(customer_id)
