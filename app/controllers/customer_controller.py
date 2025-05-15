@@ -214,7 +214,7 @@ def place_order():
 def order_history():
     user_id = get_current_user_id()
     customer = Customer.query.get(user_id)
-    orders = Order.query.filter_by(customer_id=customer.id).order_by(Order.order_date.desc()).all()
+    orders = Order.query.filter_by(customer_id=customer.id).order_by(Order.id.desc()).all()
     return render_template('customer/order_history.html', orders=orders)
 
 def get_current_user_id():
