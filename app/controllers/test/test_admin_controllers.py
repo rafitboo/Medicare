@@ -235,7 +235,6 @@ def test_batch_update_medicine_stock(client, test_data):
 
 def test_edit_user(client, test_data):
     with client.application.app_context():
-        # Test editing an existing user
         new_username = 'Updated Staff Name'
         new_email = 'updated_staff@test.com'
         new_phone = '9999999999'
@@ -283,7 +282,7 @@ def test_edit_category(client, test_data):
 
 def test_delete_category(client, test_data):
     with client.application.app_context():
-        # First ensure there are no medicines in this category
+
         Medicine.query.filter_by(category_id=test_data.category_id).delete()
         db.session.commit()
         
