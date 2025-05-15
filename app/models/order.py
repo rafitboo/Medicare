@@ -16,17 +16,17 @@ class Order(db.Model):
     order_details = db.relationship('OrderDetails', backref='order', lazy=True)
 
     @classmethod
-    def create(cls, customer_id, total_amount, payment_method='Cash on Delivery', status='Pending', payment_status='Pending', order_date=datetime.utcnow()):
+    def create(cls, customer_id, total_price, payment_method='Cash on Delivery', status='Pending', payment_status='Pending', order_date=datetime.utcnow()):
         try:
             # Input validation
             if not customer_id:
                 raise ValueError("Customer ID is required")
-            if not total_amount:
+            if not total_price:
                 raise ValueError("Total amount is required")
             
             order = cls(
                 customer_id=customer_id,
-                total_price=float(total_amount),
+                total_price=float(total_price),
                 payment_method=payment_method,
                 payment_status=payment_status,
                 status=status,
