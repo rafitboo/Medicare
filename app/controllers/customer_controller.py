@@ -59,7 +59,7 @@ def add_to_cart():
 
 @customer.route('/cart/update/<int:medicine_id>', methods=['POST'])
 def update_cart_item(medicine_id):
-    user_id = session.get('user_id')
+    user_id = get_current_user_id()
     if not user_id:
         flash('Please login first', 'error')
         return redirect(url_for('auth.login_page'))
@@ -130,7 +130,6 @@ def customer_messages():
     if request.method == 'POST':
         message = request.form.get('message')
         if message:
-
             Chat.add_message(customer_id=user_id, message=message, is_from_customer=True)
         return redirect(url_for('customer.customer_messages'))
     conversation = Chat.get_conversation(user_id)
@@ -175,7 +174,11 @@ def place_order():
             if not cart_items:
                 return jsonify({'success': False, 'error': 'Cart is empty'}), 400
 
+
+        
+
             stockUpdate = Medicine.updateStock(med_ids, cart_items)
+
 
             order = Order.create(
                 customer_id=customer.id,
@@ -184,9 +187,10 @@ def place_order():
             )
 
             if not order:
-                return jsonify({'success': False, 'error': 'Failed to create order'}), 400
+                return jsonify({'success': False, 'error': 'Failed to create order'}), 40
 
             if order.payment_method == 'bkash':
+
                 order.bkash_number = data.get('bkash_number')
                 order.transaction_id = data.get('transaction_id')
                 order.payment_status = 'Pending'
@@ -203,7 +207,7 @@ def place_order():
 
         except Exception as e:
             db.session.rollback()
-            print(f"Error creating order: {str(e)}")  # For debugging
+            print(f"Error creating order: {str(e)}")  
             return jsonify({
                 'success': False,
                 'error': 'Error processing order'
@@ -217,5 +221,21 @@ def order_history():
     orders = Order.query.filter_by(customer_id=customer.id).order_by(Order.id.desc()).all()
     return render_template('customer/order_history.html', orders=orders)
 
+@customer.route('/about', methods=['GET'])
+def about_page():
+    about_info = {
+        "description": "Medicare is a trusted healthcare platform providing quality medicines and services.",
+        "address": "D/15-1, Road-36, Block-D, Section-10, Uttara, Dhaka-1216",
+        "hotline":"09610-999778",
+        "whatsapp":"01810-119210",
+        "facebook": "https://facebook.com/medicare",
+        "instagram": "https://instagram.com/medicare",
+        "x": "https://x.com/medicare",
+        "mission": "To provide accessible and affordable healthcare solutions.",
+        "vision": "To be the leading healthcare platform in the region."
+    }
+    return render_template('customer/about.html', about_info=about_info)
+
 def get_current_user_id():
     return session.get('user_id')
+
