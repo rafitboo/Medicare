@@ -35,6 +35,35 @@
                                     <h4 class="total-price">Total: ৳{{ "%.2f"|format(order.total_price) }}</h4>
                                 </div>
                             </div>
+
+                            <!-- Add Order Details Table -->
+                            <div class="table-responsive mt-4">
+                                <h6 class="mb-3">Order Details</h6>
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Medicine Name</th>
+                                            <th class="text-center">Quantity</th>
+                                            <th class="text-end">Unit Price</th>
+                                            <th class="text-end">Subtotal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for detail in order.order_details %}
+                                        <tr>
+                                            <td>{{ detail.medicine.name }}</td>
+                                            <td class="text-center">{{ detail.quantity }}</td>
+                                            <td class="text-end">৳{{ "%.2f"|format(detail.price) }}</td>
+                                            <td class="text-end">৳{{ "%.2f"|format(detail.price * detail.quantity) }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                        <tr class="table-info">
+                                            <td colspan="3" class="text-end"><strong>Grand Total:</strong></td>
+                                            <td class="text-end"><strong>৳{{ "%.2f"|format(order.total_price) }}</strong></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -55,14 +84,44 @@
 {% block extra_css %}
 <style>
     .order-card {
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        transition: transform 0.2s;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
         max-width: 900px;
         margin: 0 auto;
+        border: none;
+        border-radius: 12px;
+        background: #ffffff;
+        margin-bottom: 2rem;
     }
 
     .order-card:hover {
-        transform: translateY(-2px);
+        transform: translateY(-4px);
+        box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .order-card .card-header {
+        background-color: #f8f9fa;
+        border-bottom: 2px solid #e9ecef;
+        border-radius: 12px 12px 0 0;
+        padding: 1.5rem;
+    }
+
+    .order-card .card-body {
+        padding: 2rem;
+    }
+
+    /* Make the order number more prominent */
+    .card-header h5 {
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: #2c3e50;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* Add a subtle border */
+    .order-card {
+        border: 1px solid rgba(0, 0, 0, 0.08);
     }
 
     .total-price {
@@ -105,6 +164,14 @@
     .table th {
         background-color: #f8f9fa;
         font-size: 1.2rem;
+        text-align: left;  /* Default alignment for headers */
+    }
+
+    /* Right align specific headers */
+    .table th:nth-child(2),
+    .table th:nth-child(3),
+    .table th:nth-child(4) {
+        text-align: right;
     }
 
     .card-header h5 {
@@ -134,7 +201,146 @@
 
     .table-responsive {
         margin: 0 auto;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        padding: 1.5rem;
+        margin-top: 2rem;
     }
+
+    .table {
+        margin-bottom: 0;
+        border-collapse: separate;
+        border-spacing: 0;
+        width: 100%;
+    }
+
+    .table th {
+        background-color: #459ef8;
+        color: #ffffff;
+        font-weight: 600;
+        padding: 1.2rem;
+        font-size: 1.1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border: none;
+    }
+
+    .table th:first-child {
+        border-top-left-radius: 8px;
+    }
+
+    .table th:last-child {
+        border-top-right-radius: 8px;
+    }
+
+    .table td {
+        padding: 1.2rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        font-size: 1.1rem;
+        vertical-align: middle;
+    }
+
+    .table tbody tr:hover {
+        background-color: rgba(69, 158, 248, 0.05);
+        transition: all 0.2s ease;
+    }
+
+    .table-info {
+        background-color: #459ef8 !important;  /* Light gray background */
+    }
+
+    .table-info td {
+        color: #ffffff !important;  /* Dark text color */
+        font-weight: 600;
+        padding: 1.2rem;
+        border: none;
+    }
+
+    /* Add rounded corners to grand total row */
+    .table-info td:first-child {
+        border-bottom-left-radius: 8px;
+    }
+
+    .table-info td:last-child {
+        border-bottom-right-radius: 8px;
+    }
+
+    /* Remove bottom border from last regular row */
+    .table tbody tr:last-child:not(.table-info) {
+        border-bottom: none;
+    }
+
+    /* Add subtle shadow to grand total row */
+    .table-info {
+        box-shadow: 0 2px 8px rgba(69, 158, 248, 0.15);
+    }
+
+    /* Keep hover state consistent */
+    .table-info:hover {
+        background-color: #3b8ae0 !important;
+        transition: background-color 0.2s ease;
+    }
+
+    /* Strong text in grand total row */
+    .table-info strong {
+        color: #ffffff;
+        font-weight: 700;
+    }
+
+    /* Add subtle transition effects */
+    .table tbody tr {
+        transition: all 0.2s ease;
+    }
+
+    /* Medicine name column styling */
+    .table td:first-child {
+        text-align: left;
+        font-weight: 500;
+        color: #2c3e50;
+    }
+
+    /* Quantity column (right aligned) */
+    .table td:nth-child(2) {
+        text-align: right;
+        font-weight: 500;
+        padding-right: 2rem;
+    }
+
+    /* Price columns (right aligned) */
+    .table td.text-end {
+        text-align: right;
+        font-weight: 500;
+        color: #2c3e50;
+        padding-right: 2rem;
+    }
+
+    /* Grand total row alignment */
+    .table-info td[colspan="3"] {
+        text-align: right;
+        padding-right: 2rem;
+    }
+
+    .table-info td:last-child {
+        text-align: right;
+        padding-right: 2rem;
+    }
+
+    /* Make grand total text and number bigger */
+.table-info td[colspan="3"] strong {
+    font-size: 1.4rem;  /* Bigger font size for "Grand Total" text */
+    letter-spacing: 0.5px;
+}
+
+.table-info td:last-child strong {
+    font-size: 1.4rem;  /* Bigger font size for total amount */
+    letter-spacing: 0.5px;
+}
+
+/* Adjust padding to accommodate bigger text */
+.table-info td {
+    padding: 1.5rem 2rem;  /* Increased padding */
+}
 
     .delivery-status {
         padding: 8px 16px;
@@ -244,5 +450,149 @@
     .shop-now-btn i {
         margin-right: 10px;
     }
+
+
+    /* Order Details Table Styles */
+    .table-responsive {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        padding: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    .table {
+        margin-bottom: 0;
+        border-collapse: separate;
+        border-spacing: 0;
+        width: 100%;
+    }
+
+    .table th {
+        background-color: #459ef8;
+        color: #ffffff;
+        font-weight: 600;
+        padding: 1.2rem;
+        font-size: 1.1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border: none;
+    }
+
+    .table th:first-child {
+        border-top-left-radius: 8px;
+    }
+
+    .table th:last-child {
+        border-top-right-radius: 8px;
+    }
+
+    .table td {
+        padding: 1.2rem;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        font-size: 1.1rem;
+        vertical-align: middle;
+    }
+
+    .table tbody tr:hover {
+        background-color: rgba(69, 158, 248, 0.05);
+        transition: all 0.2s ease;
+    }
+
+    .table-info {
+        background-color: #459ef8 !important;  /* Light gray background */
+    }
+
+    .table-info td {
+        color: #ffffff !important;  /* Dark text color */
+        font-weight: 600;
+        padding: 1.2rem;
+        border: none;
+    }
+
+    /* Add rounded corners to grand total row */
+    .table-info td:first-child {
+        border-bottom-left-radius: 8px;
+    }
+
+    .table-info td:last-child {
+        border-bottom-right-radius: 8px;
+    }
+
+    /* Remove bottom border from last regular row */
+    .table tbody tr:last-child:not(.table-info) {
+        border-bottom: none;
+    }
+
+    /* Add subtle shadow to grand total row */
+    .table-info {
+        box-shadow: 0 2px 8px rgba(69, 158, 248, 0.15);
+    }
+
+    /* Keep hover state consistent */
+    .table-info:hover {
+        background-color: #3b8ae0 !important;
+        transition: background-color 0.2s ease;
+    }
+
+    /* Strong text in grand total row */
+    .table-info strong {
+        color: #ffffff;
+        font-weight: 700;
+    }
+
+    /* Add subtle transition effects */
+    .table tbody tr {
+        transition: all 0.2s ease;
+    }
+
+    /* Medicine name column styling */
+    .table td:first-child {
+        text-align: left;
+        font-weight: 500;
+        color: #2c3e50;
+    }
+
+    /* Quantity column (right aligned) */
+    .table td:nth-child(2) {
+        text-align: right;
+        font-weight: 500;
+        padding-right: 2rem;
+    }
+
+    /* Price columns (right aligned) */
+    .table td.text-end {
+        text-align: right;
+        font-weight: 500;
+        color: #2c3e50;
+        padding-right: 2rem;
+    }
+
+    /* Grand total row alignment */
+    .table-info td[colspan="3"] {
+        text-align: right;
+        padding-right: 2rem;
+    }
+
+    .table-info td:last-child {
+        text-align: right;
+        padding-right: 2rem;
+    }
+
+    /* Make grand total text and number bigger */
+.table-info td[colspan="3"] strong {
+    font-size: 1.4rem;  /* Bigger font size for "Grand Total" text */
+    letter-spacing: 0.5px;
+}
+
+.table-info td:last-child strong {
+    font-size: 1.4rem;  /* Bigger font size for total amount */
+    letter-spacing: 0.5px;
+}
+
+/* Adjust padding to accommodate bigger text */
+.table-info td {
+    padding: 1.5rem 2rem;  /* Increased padding */
+}
 </style>
 {% endblock %}

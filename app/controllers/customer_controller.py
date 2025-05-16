@@ -11,6 +11,7 @@ from app.models.admin import Admin
 from app.models.staff import Staff
 from datetime import timedelta
 from app.models.order import Order
+from app.models.order_details import OrderDetails
 
 customer = Blueprint('customer', __name__)
 
@@ -186,6 +187,20 @@ def place_order():
             if not order:
                 return jsonify({'success': False, 'error': 'Failed to create order'}), 400
 
+            for cart_item in cart_items:
+                order_detail = OrderDetails.create(
+                    order_id=order.id,
+                    medicine_id=cart_item.medicine.id,
+                    quantity=cart_item.quantity,
+                    price=cart_item.medicine.price
+                )
+                if not order_detail:
+                    db.session.rollback()
+                    return jsonify({
+                        'success': False, 
+                        'error': 'Failed to create order details'
+                    }), 400
+
             if order.payment_method == 'bkash':
                 order.bkash_number = data.get('bkash_number')
                 order.transaction_id = data.get('transaction_id')
@@ -214,7 +229,26 @@ def place_order():
 def order_history():
     user_id = get_current_user_id()
     customer = Customer.query.get(user_id)
-    orders = Order.query.filter_by(customer_id=customer.id).order_by(Order.id.desc()).all()
+    
+    orders = Order.query.filter_by(customer_id=customer.id)\
+        .order_by(Order.id.desc())\
+        .all()
+
+    if not orders:
+        return render_template('customer/order_history.html', orders=[])
+
+    for order in orders:
+        details = db.session.query(OrderDetails, Medicine)\
+            .join(Medicine, OrderDetails.medicine_id == Medicine.id)\
+            .filter(OrderDetails.order_id == order.id)\
+            .all()
+            
+        order.order_details = []
+        
+        for detail, medicine in details:
+            detail.medicine = medicine
+            order.order_details.append(detail)
+            
     return render_template('customer/order_history.html', orders=orders)
 
 def get_current_user_id():
