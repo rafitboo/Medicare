@@ -21,6 +21,120 @@ class Admin(User):
         kwargs['role'] = 'admin'
         kwargs['type'] = 'admin'
         super().__init__(**kwargs)
+    def add_user(self, username, email, phone, role='customer', address=None, password=None):
+
+        if User.query.filter((User.username == username) | (User.email == email)).first():
+            return False, "A user with this username or email already exists."
+
+        role_classes = {
+            'customer': Customer,
+            'admin': Admin,
+            'staff': Staff
+        }
+
+
+        user_class = role_classes.get(role)
+        if not user_class:
+            return False, "Invalid role specified."
+        
+        new_user = user_class(
+            username=username,
+            email=email,
+            phone=phone,
+            address=address,
+            password=password
+        )
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+            return True, f"{role.capitalize()} added successfully."
+        except Exception as e:
+            db.session.rollback()
+            return False, f"Error adding user: {e}"
+    
+    def edit_user(self, user_id, name, email, role, address, phone):
+        user = User.query.get(user_id)
+        if not user:
+            return False
+
+        user.username = name
+        user.email = email
+        user.role = role
+        user.address = address
+        user.phone = phone
+
+        try:
+            db.session.commit()
+            return True
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error editing user: {e}")
+            return False
+
+    def delete_user(self, user_id):
+        user = User.query.get(user_id)
+        if not user:
+            return False
+
+        try:
+            Cart.query.filter_by(customer_id=user_id).delete()
+            Chat.query.filter_by(customer_id=user_id).delete()
+            Order.query.filter_by(customer_id=user_id).delete()
+
+            db.session.delete(user)
+            db.session.commit()
+            return True
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error deleting user: {e}")
+            return False
+    
+    def add_category(self, name, description):
+
+        existing_category = Category.query.filter_by(name=name).first()
+        if existing_category:
+            return False, "Category already exists."
+
+        new_category = Category(name=name, description=description)
+        db.session.add(new_category)
+        try:
+            db.session.commit()
+            return True, "Category added successfully."
+        except Exception as e:
+            db.session.rollback()
+            return False, f"Error adding category: {e}"
+
+    def update_category(self, category_id, name, description):
+
+        category = Category.query.get(category_id)
+        if not category:
+            return False, "Category not found."
+
+        category.name = name
+        category.description = description
+        try:
+            db.session.commit()
+            return True, "Category updated successfully."
+        except Exception as e:
+            db.session.rollback()
+            return False, f"Error updating category: {e}"
+
+    def delete_category(self, category_id):
+
+        category = Category.query.get(category_id)
+        if not category:
+            return False, "Category not found."
+        associated_medicines = Medicine.query.filter_by(category_id=category_id).count()
+        if associated_medicines > 0:
+            return False, "Cannot delete category. There are medicines associated with this category."
+
+        db.session.delete(category)
+        try:
+            db.session.commit()
+            return True, "Category deleted successfully."
+        except Exception as e:
+            db.session.rollback()
+            return False, f"Error deleting category: {e}"
 
     def add_medicine(self, name, description, category_id, price, stock):
         existing_medicine = Medicine.query.filter_by(name=name).first()
@@ -82,117 +196,4 @@ class Admin(User):
         return False
 
 
-    def edit_user(self, user_id, name, email, role, address, phone):
-        user = User.query.get(user_id)
-        if not user:
-            return False
-
-        user.username = name
-        user.email = email
-        user.role = role
-        user.address = address
-        user.phone = phone
-
-        try:
-            db.session.commit()
-            return True
-        except Exception as e:
-            db.session.rollback()
-            print(f"Error editing user: {e}")
-            return False
-
-    def delete_user(self, user_id):
-        user = User.query.get(user_id)
-        if not user:
-            return False
-
-        try:
-            Cart.query.filter_by(customer_id=user_id).delete()
-            Chat.query.filter_by(customer_id=user_id).delete()
-            Order.query.filter_by(customer_id=user_id).delete()
-
-            db.session.delete(user)
-            db.session.commit()
-            return True
-        except Exception as e:
-            db.session.rollback()
-            print(f"Error deleting user: {e}")
-            return False
-
-    def add_user(self, username, email, phone, role='customer', address=None, password=None):
-
-        if User.query.filter((User.username == username) | (User.email == email)).first():
-            return False, "A user with this username or email already exists."
-
-        role_classes = {
-            'customer': Customer,
-            'admin': Admin,
-            'staff': Staff
-        }
-
-
-        user_class = role_classes.get(role)
-        if not user_class:
-            return False, "Invalid role specified."
-        
-        new_user = user_class(
-            username=username,
-            email=email,
-            phone=phone,
-            address=address,
-            password=password
-        )
-        try:
-            db.session.add(new_user)
-            db.session.commit()
-            return True, f"{role.capitalize()} added successfully."
-        except Exception as e:
-            db.session.rollback()
-            return False, f"Error adding user: {e}"
-
-    def add_category(self, name, description):
-
-        existing_category = Category.query.filter_by(name=name).first()
-        if existing_category:
-            return False, "Category already exists."
-
-        new_category = Category(name=name, description=description)
-        db.session.add(new_category)
-        try:
-            db.session.commit()
-            return True, "Category added successfully."
-        except Exception as e:
-            db.session.rollback()
-            return False, f"Error adding category: {e}"
-
-    def update_category(self, category_id, name, description):
-
-        category = Category.query.get(category_id)
-        if not category:
-            return False, "Category not found."
-
-        category.name = name
-        category.description = description
-        try:
-            db.session.commit()
-            return True, "Category updated successfully."
-        except Exception as e:
-            db.session.rollback()
-            return False, f"Error updating category: {e}"
-
-    def delete_category(self, category_id):
-
-        category = Category.query.get(category_id)
-        if not category:
-            return False, "Category not found."
-        associated_medicines = Medicine.query.filter_by(category_id=category_id).count()
-        if associated_medicines > 0:
-            return False, "Cannot delete category. There are medicines associated with this category."
-
-        db.session.delete(category)
-        try:
-            db.session.commit()
-            return True, "Category deleted successfully."
-        except Exception as e:
-            db.session.rollback()
-            return False, f"Error deleting category: {e}"
+    
