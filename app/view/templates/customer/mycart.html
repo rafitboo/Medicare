@@ -24,7 +24,7 @@
                     {% for item in cart_items %}
                     <tr>
                         <td class="medicine-name">{{ item.medicine.name }}</td>
-                        <td class="medicine-price">${{ "%.2f"|format(item.medicine.price) }}</td>
+                        <td class="medicine-price">৳{{ "%.2f"|format(item.medicine.price) }}</td>
                         <td class="quantity-cell">
                             <form method="POST" action="{{ url_for('customer.update_cart_item', medicine_id=item.medicine_id) }}">
                                 <div class="quantity-control">
@@ -39,7 +39,7 @@
                                 </div>
                             </form>
                         </td>
-                        <td class="item-total">${{ "%.2f"|format(item.medicine.price * item.quantity) }}</td>
+                        <td class="item-total">৳{{ "%.2f"|format(item.medicine.price * item.quantity) }}</td>
                         <td class="action-cell">
                             <form method="POST" action="{{ url_for('customer.remove_from_cart', medicine_id=item.medicine_id) }}">
                                 <button type="submit" class="remove-btn">×</button>
@@ -60,7 +60,7 @@
     {% if cart_items %}
     <div class="cart-summary">
         <div class="summary-content">
-            <h3>Cart Total: <span id="cart-total">${{ "%.2f"|format(total) }}</span></h3>
+            <h3>Cart Total: <span id="cart-total">৳{{ "%.2f"|format(total) }}</span></h3>
             <a href="{{ url_for('customer.checkout') }}" class="checkout-btn">Proceed to Checkout</a>
             <a href="{{ url_for('customer.dashboard') }}" class="continue-shopping">Continue Shopping</a>
         </div>

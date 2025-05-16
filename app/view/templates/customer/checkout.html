@@ -25,13 +25,13 @@
                             <span class="item-name">{{ item.medicine.name }}</span>
                             <span class="item-quantity">x {{ item.quantity }}</span>
                         </div>
-                        <span class="item-price">${{ "%.2f"|format(item.medicine.price * item.quantity) }}</span>
+                        <span class="item-price">৳{{ "%.2f"|format(item.medicine.price * item.quantity) }}</span>
                     </div>
                     {% endfor %}
                     <hr>
                     <div class="total-section">
                         <span class="total-label">Total Amount:</span>
-                        <span class="total-amount">${{ "%.2f"|format(total) }}</span>
+                        <span class="total-amount">৳{{ "%.2f"|format(total) }}</span>
                     </div>
                 </div>
             </div>

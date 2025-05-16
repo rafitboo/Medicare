@@ -5,7 +5,6 @@
 {% block content %}
 <div class="container mt-5">
     <h2 class="text-center mb-4">Your Order History</h2>
-
     {% if orders %}
         <div class="row">
             {% for order in orders %}
@@ -16,7 +15,7 @@
                             <p><strong>Delivery Status:</strong>
                             <span class="status-badge 
                                 {% if order.status == 'Delivered' %}status-delivered
-                                {% elif order.status == 'Dispatched for Delivery' %}status-dispatched
+                                {% elif order.status == 'Out for Delivery' %}status-dispatched
                                 {% elif order.status == 'Pending' %}status-pending
                                 {% endif %}">
                                 {{ order.status }}
@@ -33,34 +32,8 @@
                                     </p>
                                 </div>
                                 <div class="col-md-6 text-md-end">
-                                    <h4 class="total-price">Total: ${{ "%.2f"|format(order.total_price) }}</h4>
+                                    <h4 class="total-price">Total: ৳{{ "%.2f"|format(order.total_price) }}</h4>
                                 </div>
-                            </div>
-
-                            <hr>
-
-                            <h6 class="mb-3">Order Details</h6>
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Medicine</th>
-                                            <th>Quantity</th>
-                                            <th>Price</th>
-                                            <th>Subtotal</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for detail in order.order_details %}
-                                            <tr>
-                                                <td>{{ detail.medicine.name }}</td>
-                                                <td>{{ detail.quantity }}</td>
-                                                <td>${{ "%.2f"|format(detail.price) }}</td>
-                                                <td>${{ "%.2f"|format(detail.price * detail.quantity) }}</td>
-                                            </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
                             </div>
                         </div>
                     </div>

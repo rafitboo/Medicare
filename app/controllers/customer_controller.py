@@ -169,22 +169,28 @@ def place_order():
             user_id = get_current_user_id()
             customer = Customer.query.get(user_id)
             cart_items, total, _ = customer.get_cart_data()
-
+            med_ids = Cart.query.filter_by(customer_id=user_id).with_entities(Cart.medicine_id).all()
+            
             if not cart_items:
                 return jsonify({'success': False, 'error': 'Cart is empty'}), 400
 
+
         
+
+            stockUpdate = Medicine.updateStock(med_ids, cart_items)
+
+
             order = Order.create(
                 customer_id=customer.id,
-                total_amount=total,
+                total_price=total,
                 payment_method=payment_method
             )
 
             if not order:
-                return jsonify({'success': False, 'error': 'Failed to create order'}), 400
+                return jsonify({'success': False, 'error': 'Failed to create order'}), 40
 
-      
-            if payment_type == 'bkash':
+            if order.payment_method == 'bkash':
+
                 order.bkash_number = data.get('bkash_number')
                 order.transaction_id = data.get('transaction_id')
                 order.payment_status = 'Pending'
@@ -212,7 +218,7 @@ def place_order():
 def order_history():
     user_id = get_current_user_id()
     customer = Customer.query.get(user_id)
-    orders = Order.query.filter_by(customer_id=customer.id).order_by(Order.order_date.desc()).all()
+    orders = Order.query.filter_by(customer_id=customer.id).order_by(Order.id.desc()).all()
     return render_template('customer/order_history.html', orders=orders)
 
 @customer.route('/about', methods=['GET'])
