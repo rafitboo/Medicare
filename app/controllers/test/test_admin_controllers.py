@@ -1,3 +1,4 @@
+#pytest -v app/controllers/test/test_admin_controllers.py
 import pytest
 from flask import session
 from app import create_app, db
@@ -161,7 +162,7 @@ def test_manage_medicines(client, test_data):
 
 def test_manage_users(client):
     with client.application.app_context():
-        response = client.post('/admin/manage_users', data={
+        response = client.post('/staff/manage_users', data={
             'action': 'add',
             'username': 'newstaff',
             'email': 'newstaff@test.com',
@@ -232,3 +233,62 @@ def test_batch_update_medicine_stock(client, test_data):
             
             updated_medicine = Medicine.query.filter_by(id=medicine.id).first()
             assert updated_medicine.stock == new_stock
+
+def test_edit_user(client, test_data):
+    with client.application.app_context():
+        new_username = 'Updated Staff Name'
+        new_email = 'updated_staff@test.com'
+        new_phone = '9999999999'
+        new_address = 'Updated Address'
+        
+        response = client.post(f'/admin/edit_users/{test_data.user_id}', data={
+            'name': new_username,
+            'email': new_email,
+            'role': 'staff',
+            'phone': new_phone,
+            'address': new_address
+        })
+        assert response.status_code == 302
+        
+        updated_user = User.query.get(test_data.user_id)
+        assert updated_user is not None
+        assert updated_user.username == new_username
+        assert updated_user.email == new_email
+        assert updated_user.phone == new_phone
+        assert updated_user.address == new_address
+
+def test_delete_user(client, test_data):
+    with client.application.app_context():
+        response = client.post(f'/admin/delete_user/{test_data.user_id}')
+        assert response.status_code == 302
+        
+        deleted_user = User.query.filter_by(id=test_data.user_id).first()
+        assert deleted_user is None
+
+def test_edit_category(client, test_data):
+    with client.application.app_context():
+        new_name = 'Updated Test Category'
+        new_description = 'Updated test category description'
+        
+        response = client.post(f'/admin/edit_category/{test_data.category_id}', data={
+            'name': new_name,
+            'description': new_description
+        })
+        assert response.status_code == 302
+        
+        updated_category = Category.query.get(test_data.category_id)
+        assert updated_category is not None
+        assert updated_category.name == new_name
+        assert updated_category.description == new_description
+
+def test_delete_category(client, test_data):
+    with client.application.app_context():
+
+        Medicine.query.filter_by(category_id=test_data.category_id).delete()
+        db.session.commit()
+        
+        response = client.post(f'/admin/delete_category/{test_data.category_id}')
+        assert response.status_code == 302
+        
+        deleted_category = Category.query.filter_by(id=test_data.category_id).first()
+        assert deleted_category is None

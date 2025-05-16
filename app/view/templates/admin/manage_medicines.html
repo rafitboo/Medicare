@@ -77,7 +77,7 @@
                 <div class="medicine-item" data-stock="{{ medicine.stock }}" data-name="{{ medicine.name|lower }}">
                     <span class="med-name">{{ medicine.name }}</span>
                     <span class="med-category">{{ medicine.category.name }}</span>
-                    <span class="med-price">${{ "%.2f"|format(medicine.price) }}</span>
+                    <span class="med-price">TK {{ "%.2f"|format(medicine.price) }}</span>
                     <span class="med-stock {% if medicine.stock == 0 %}out-of-stock{% elif medicine.stock < 10 %}low-stock{% endif %}">
                         {{ medicine.stock }}
                     </span>
