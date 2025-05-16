@@ -162,7 +162,7 @@ def test_manage_medicines(client, test_data):
 
 def test_manage_users(client):
     with client.application.app_context():
-        response = client.post('/admin/manage_users', data={
+        response = client.post('/staff/manage_users', data={
             'action': 'add',
             'username': 'newstaff',
             'email': 'newstaff@test.com',
