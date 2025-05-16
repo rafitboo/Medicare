@@ -9,10 +9,8 @@ class Cart(db.Model):
     customer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     medicine_id = db.Column(db.Integer, db.ForeignKey('medicines.id'), nullable=False)
     
-    # Add relationship with Medicine model
     medicine = db.relationship('Medicine', backref='cart_items')
 
-    # Add unique constraint to prevent duplicate entries
     __table_args__ = (
         db.UniqueConstraint('customer_id', 'medicine_id', name='unique_cart_item'),
     )

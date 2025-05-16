@@ -1,3 +1,4 @@
+#pytest -v app/controllers/test/test_admin_controllers.py
 import pytest
 from flask import session
 from app import create_app, db
